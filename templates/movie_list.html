@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}All Movies{% endblock %}
+
+{% block content %}
+
+    <h2>All Movies</h2>
+    <ul>
+      {% for movie in movies %}
+          <li>
+              <a href="/movies/{{ movie.movie_id }}">
+                {{ movie.title }} 
+                  {% if movie.released_at != None %}
+                    ({{ movie.released_at.year }})
+                  {% endif %}
+              </a>
+          </li>
+      {% endfor %}
+    </ul>
+
+{% endblock %}
