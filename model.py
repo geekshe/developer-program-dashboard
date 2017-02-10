@@ -18,7 +18,7 @@ class Environment(db.Model):
 
     __tablename__ = "environment"
 
-    env_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    env_id = db.Column(db.Integer, primary_key=True)
     env_name = db.Column(db.String(64), nullable=False, unique=True)
     env_base_url = db.Column(db.String(128), nullable=False, unique=True)
 

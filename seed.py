@@ -26,44 +26,42 @@ def load_env(data):
     # we won't be trying to add duplicate api lines
     Environment.query.delete()
 
-    # Read u.user file and insert data
-    for row in data:
+    # Hard-code data as it never changes
+    row1 = Environment(
+        env_id = 1,
+        env_name = 'Production',
+        env_base_url = 'https://api.constantcontact.com/v2')
 
-        if data[2] == "AppConnect Production":
-            env_name = 'Production'
-            env_base_url = 'https://api.constantcontact.com/v2'
-        else:
-            env_name = 'Sandbox'
-            env_base_url = 'https://api.constantcontact.com/sandbox'
-
-        environment = Environment(env_name=env_name,
-                  env_base_url=env_base_url)
+    row2 = Environment(
+        env_id = 2,
+        env_name = 'Sandbox',
+        env_base_url = 'https://api.constantcontact.com/sandbox')
 
         # We need to add to the session or it won't ever be stored
-        db.session.add(environment)
+    db.session.add_all([row1, row2])
 
-    # Once we're done, we should commit our work
+        # Once we're done, we should commit our work
     db.session.commit()
 
 
 def load_api(data):
-    """Load API values. In this case, they don't come from the CSV file, but
-       are the same for each row in that file."""
+    """Load values relating to the API as a whole."""
+
+    # TODO: Merge identical lines into the DB
 
     # Delete all rows in table, so if we need to run this a second time,
     # we won't be trying to add duplicate api lines
     API.query.delete()
 
-    # Read u.user file and insert data
+    # Read data from csv file and insert rows
+    # header_row = next(data)
     for row in data:
 
         api_name = 'Constant Contact API'
         if data[2] == "AppConnect Production":
-            q = Environment.query.filter_by(env_name='Production').one()
-            env_id = q[0]
+            env_id = 1
         else:
-            q = Environment.query.filter_by(env_name='Sandbox').one()
-            env_id = q[0]
+            env_id = 2
         if 'v2' in data[0]:
             version = 'v2'
         else:
@@ -89,7 +87,7 @@ if __name__ == "__main__":
     # Import different types of data
     data = read_data_file()
     load_env(data)
-    # load_api(data)
+    load_api(data)
     # load_call(data)
     # load_agg_requests(data)
     # load_requests()
