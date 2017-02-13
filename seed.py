@@ -24,7 +24,7 @@ def load_env(data):
 
     # Delete all rows in table, so if we need to run this a second time,
     # we won't be trying to add duplicate api lines
-    Environment.query.delete()
+    # Environment.query.delete()
 
     # Hard-code data as it never changes
     row1 = Environment(
@@ -34,11 +34,21 @@ def load_env(data):
 
     row2 = Environment(
         env_id = 2,
-        env_name = 'Sandbox',
-        env_base_url = 'https://api.constantcontact.com/sandbox')
+        env_name = 'Staging',
+        env_base_url = 'https://api.constantcontact.com/staging')
+
+    row3 = Environment(
+        env_id = 3,
+        env_name = 'Partner',
+        env_base_url = 'https://api.constantcontact.com/L1')
+
+    row4 = Environment(
+        env_id = 4,
+        env_name = 'Internal',
+        env_base_url = 'https://api.constantcontact.com/D1')
 
         # We need to add to the session or it won't ever be stored
-    db.session.add_all([row1, row2])
+    db.session.add_all([row1, row2, row3, row4])
 
         # Once we're done, we should commit our work
     db.session.commit()
@@ -47,22 +57,30 @@ def load_env(data):
 def load_api(data):
     """Load values relating to the API as a whole."""
 
-    # TODO: Merge identical lines into the DB
+    # [[TODO: Merge identical lines into the DB]]
+    # [[TODO: Skip header row]]
 
     # Delete all rows in table, so if we need to run this a second time,
     # we won't be trying to add duplicate api lines
-    API.query.delete()
+    # API.query.delete()
 
     # Read data from csv file and insert rows
-    # header_row = next(data)
+    # header_row = next(data)  // Syntax to skip header not working on list
     for row in data:
 
         api_name = 'Constant Contact API'
-        if data[2] == "AppConnect Production":
+        if "Production" in row[2]:
             env_id = 1
-        else:
+        elif "Stage" in row[2]:
             env_id = 2
-        if 'v2' in data[0]:
+        elif "L1" in row[2]:
+            env_id = 3
+        elif "D1" in row[2]:
+            env_id = 4
+        else:
+            env_id = 1
+
+        if 'v2' in row[0]:
             version = 'v2'
         else:
             version = 'v1'
@@ -78,6 +96,36 @@ def load_api(data):
     db.session.commit()
 
 
+def load_call(data):
+    """Load values for an individual API call"""
+
+    # Delete all rows in table, so if we need to run this a second time,
+    # we won't be trying to add duplicate api lines
+    # Call.query.delete()
+
+    # Read data from csv file and insert rows
+    # header_row = next(data)
+    for row in data:
+
+        call_code = row[1] + row[2]
+        call_name = row[1]
+        api_id = 1
+        endpoint = '/foo'
+        method = 'GET'
+
+        call = Call(call_code=call_code,
+                  call_name=call_name,
+                  api_id=api_id,
+                  endpoint=endpoint,
+                  method = method)
+
+        # We need to add to the session or it won't ever be stored
+        db.session.add(call)
+
+    # Once we're done, we should commit our work
+    db.session.commit()
+
+
 if __name__ == "__main__":
     connect_to_db(app)
 
@@ -88,6 +136,6 @@ if __name__ == "__main__":
     data = read_data_file()
     load_env(data)
     load_api(data)
-    # load_call(data)
+    load_call(data)
     # load_agg_requests(data)
     # load_requests()

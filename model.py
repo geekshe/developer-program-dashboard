@@ -65,7 +65,8 @@ class Call(db.Model):
 
     __tablename__ = "call"
 
-    call_name = db.Column(db.String(64), primary_key=True)
+    call_code = db.Column(db.String(128), primary_key=True)
+    call_name = db.Column(db.String(128))
     api_id = db.Column(db.Integer,
                        db.ForeignKey("api.api_id"),
                        nullable=False)
@@ -75,7 +76,8 @@ class Call(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Call call_name={} api_id={} endpoint={}, method={}>".format(
+        return "<Call call_code={} call_name={} api_id={} endpoint={}, method={}>".format(
+                                                                       self.call_code,
                                                                        self.call_name,
                                                                        self.api_id,
                                                                        self.endpoint,
@@ -88,8 +90,8 @@ class Agg_Request(db.Model):
     __tablename__ = "agg_request"
 
     aggr_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    call_name = db.Column(db.String(64),
-                        db.ForeignKey("call.call_name"),
+    call_code = db.Column(db.String(128),
+                        db.ForeignKey("call.call_code"),
                         nullable=False)
     success_count = db.Column(db.Integer, nullable=False)
     block_count = db.Column(db.Integer, nullable=False)
@@ -100,8 +102,9 @@ class Agg_Request(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Agg_Request aggr_id={} success_count={} block_count={} other_count={} total_responses={} avg_response_time={}>".format(
+        return "<Agg_Request aggr_id={} call_code={} success_count={} block_count={} other_count={} total_responses={} avg_response_time={}>".format(
                                                                        self.aggr_id,
+                                                                       self.call_code,
                                                                        self.success_count,
                                                                        self.block_count,
                                                                        self.other_count,
@@ -110,7 +113,7 @@ class Agg_Request(db.Model):
 
     call = db.relationship("Call",
                            backref=db.backref("agg_request",
-                           order_by=call_name))
+                           order_by=call_code))
 
 
 class Request(db.Model):
@@ -119,8 +122,8 @@ class Request(db.Model):
     __tablename__ = "request"
 
     request_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    call_name = db.Column(db.String,
-                        db.ForeignKey("call.call_name"),
+    call_code = db.Column(db.String(128),
+                        db.ForeignKey("call.call_code"),
                         nullable=False)
     response_code = db.Column(db.String(128), nullable=False)
     response_time = db.Column(db.Numeric, nullable=False)
@@ -128,15 +131,15 @@ class Request(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Request request_id={} call_id={} response_code={} response_time={}>".format(
+        return "<Request request_id={} call_code={} response_code={} response_time={}>".format(
                                                                        self.request_id,
-                                                                       self.call_id,
+                                                                       self.call_code,
                                                                        self.response_code,
                                                                        self.response_time)
 
     call = db.relationship("Call",
                            backref=db.backref("request",
-                           order_by=call_name))
+                           order_by=call_code))
 
 
 ##############################################################################
