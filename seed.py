@@ -8,10 +8,11 @@ from datetime import datetime
 from model import connect_to_db, db
 from server import app
 
+import csv
+
 def read_data_file():
     """Read data from CSV and return it for addition to various tables"""
 
-    import csv
     f = open('mashery_sm.csv')
     csv_f = csv.reader(f)
 
@@ -21,10 +22,6 @@ def read_data_file():
 def load_env(data):
     """Load API values. In this case, they don't come from the CSV file, but
        are the same for each row in that file."""
-
-    # Delete all rows in table, so if we need to run this a second time,
-    # we won't be trying to add duplicate api lines
-    # Environment.query.delete()
 
     # Hard-code data as it never changes
     row1 = Environment(
@@ -60,13 +57,9 @@ def load_api(data):
     # [[TODO: Merge identical lines into the DB]]
     # [[TODO: Skip header row]]
 
-    # Delete all rows in table, so if we need to run this a second time,
-    # we won't be trying to add duplicate api lines
-    # API.query.delete()
-
     # Read data from csv file and insert rows
     # header_row = next(data)  // Syntax to skip header not working on list
-    for row in data:
+    for row in data[1:]:
 
         api_name = 'Constant Contact API'
         if "Production" in row[2]:
@@ -99,19 +92,53 @@ def load_api(data):
 def load_call(data):
     """Load values for an individual API call"""
 
-    # Delete all rows in table, so if we need to run this a second time,
-    # we won't be trying to add duplicate api lines
-    # Call.query.delete()
-
     # Read data from csv file and insert rows
-    # header_row = next(data)
-    for row in data:
+    header_row = next(data)
 
-        call_code = row[1] + row[2]
+    for row in data:
+        if "list" in row[0]:
+            call_code_prefix = 'lists'
+            endpoint = '/lists'
+            method = 'GET'
+        elif "email" in row[0]:
+            call_code_prefix = 'email'
+            endpoint = '/emailmarketing'
+            method = 'GET'
+        elif "contact" in row[0]:
+            call_code_prefix = 'contacts'
+            endpoint = '/contacts'
+            method = 'GET'
+        elif "eventspot" in row[0]:
+            call_code_prefix = 'events'
+            endpoint = '/eventspot'
+            method = 'GET'
+        elif "info" in row[0]:
+            call_code_prefix = 'account'
+            endpoint = '/account/info'
+            method = 'GET'
+        elif "verified" in row[0]:
+            call_code_prefix = 'email_ver'
+            endpoint = '/account/verifiedemailaddresses'
+            method = 'GET'
+        else:
+            call_code_prefix = 'other'
+            endpoint = None
+            method = None
+
+        if "Production" in row[2]:
+            call_code_suffix = 'prod'
+        elif "Stage" in row[2]:
+            call_code_suffix = 'stage'
+        elif "L1" in row[2]:
+            call_code_suffix = 'l1'
+        elif "D1" in row[2]:
+            call_code_suffix = 'd1'
+        else:
+            call_code_suffix = 'other'
+
+        call_code = "{}: {}".format(call_code_prefix, call_code_suffix)
         call_name = row[1]
         api_id = 1
-        endpoint = '/foo'
-        method = 'GET'
 
         call = Call(call_code=call_code,
                   call_name=call_name,
@@ -125,6 +152,33 @@ def load_call(data):
     # Once we're done, we should commit our work
     db.session.commit()
 
+# def load_agg_request(data):
+#     """Load aggregate values for different calls and environments"""
+
+#     # Read data from csv file and insert rows
+#     # header_row = next(data)
+#     for row in data:
+#         call_code = row.get_call_code()
+#         success_count = row[5]
+#         block_count = row[6]
+#         other_count = row[7]
+#         total_responses = row[8]
+#         avg_response_time = row[4]
+
+
+#         agg_request = Agg_Request(call_code=call_code,
+#                   success_count=success_count,
+#                   block_count=block_count,
+#                   other_count=other_count,
+#                   total_responses=total_responses,
+#                   avg_response_time=avg_response_time)
+
+#         # We need to add to the session or it won't ever be stored
+#         db.session.add(call)
+
+#     # Once we're done, we should commit our work
+#     db.session.commit()
+
 
 if __name__ == "__main__":
     connect_to_db(app)
@@ -137,5 +191,5 @@ if __name__ == "__main__":
     load_env(data)
     load_api(data)
     load_call(data)
-    # load_agg_requests(data)
+    # load_agg_request(data)
     # load_requests()

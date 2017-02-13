@@ -70,8 +70,8 @@ class Call(db.Model):
     api_id = db.Column(db.Integer,
                        db.ForeignKey("api.api_id"),
                        nullable=False)
-    endpoint = db.Column(db.String(128), nullable=False)
-    method = db.Column(db.String(10), nullable=False)
+    endpoint = db.Column(db.String(128))
+    method = db.Column(db.String(10))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
