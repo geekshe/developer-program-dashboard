@@ -26,6 +26,12 @@ def index():
 
     return render_template("homepage.html")
 
+@app.route('/calls')
+def calls_by_volume():
+    """Chart of API calls by volume."""
+
+    return render_template("calls.html")
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension

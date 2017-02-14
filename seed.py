@@ -13,7 +13,12 @@ import csv
 def read_data_file():
     """Read data from CSV and return it for addition to various tables"""
 
+    # Uncomment to open test file
     f = open('mashery_sm.csv')
+
+    # Uncomment to open full file
+    # f = open('mashery.csv')
+
     csv_f = csv.reader(f)
 
     return list(csv_f)
@@ -22,7 +27,7 @@ def create_call_code(row):
 
     if "list" in row[0]:
         call_code_prefix = 'lists'
-    elif "email" in row[0]:
+    elif "emailmarketing" in row[0]:
         call_code_prefix = 'email'
     elif "contact" in row[0]:
         call_code_prefix = 'contacts'
@@ -31,9 +36,13 @@ def create_call_code(row):
     elif "info" in row[0]:
         call_code_prefix = 'account'
     elif "verified" in row[0]:
-        call_code_prefix = 'email_ver'
+        call_code_prefix = 'verif'
+    elif "library" in row[0]:
+        call_code_prefix = 'libr'
+    elif "partner" in row[0]:
+        call_code_prefix = 'part'
     else:
-        call_code_prefix = 'other'
+        call_code_prefix = row[0]
 
     if "Production" in row[2]:
         call_code_suffix = 'prod'
@@ -44,9 +53,9 @@ def create_call_code(row):
     elif "D1" in row[2]:
         call_code_suffix = 'd1'
     else:
-        call_code_suffix = 'other'
+        call_code_suffix = row[2]
 
-    call_code = "{}: {}".format(call_code_prefix, call_code_suffix)
+    call_code = "{} ({})".format(call_code_prefix, call_code_suffix)
     return call_code
 
 def load_env(data):
@@ -132,7 +141,7 @@ def load_call(data):
         if "list" in row[0]:
             endpoint = '/lists'
             method = 'GET'
-        elif "email" in row[0]:
+        elif "emailmarketing" in row[0]:
             endpoint = '/emailmarketing'
             method = 'GET'
         elif "contact" in row[0]:
@@ -146,6 +155,12 @@ def load_call(data):
             method = 'GET'
         elif "verified" in row[0]:
             endpoint = '/account/verifiedemailaddresses'
+            method = 'GET'
+        elif "library" in row[0]:
+            endpoint = '/libraries'
+            method = 'GET'
+        elif "partner" in row[0]:
+            endpoint = '/partners'
             method = 'GET'
         else:
             endpoint = None
@@ -163,32 +178,30 @@ def load_call(data):
     # Once we're done, we should commit our work
     db.session.commit()
 
-# def load_agg_request(data):
-#     """Load aggregate values for different calls and environments"""
+def load_agg_request(data):
+    """Load aggregate values for different calls and environments"""
 
-#     # Read data from csv file and insert rows
-#     # header_row = next(data)
-#     for row in data:
-#         call_code = row.get_call_code()
-#         success_count = row[5]
-#         block_count = row[6]
-#         other_count = row[7]
-#         total_responses = row[8]
-#         avg_response_time = row[4]
+    # Read data from csv file and insert rows
+    for row in data[1:]:
+        call_code = call_code = create_call_code(row)
+        success_count = row[5]
+        block_count = row[6]
+        other_count = row[7]
+        total_responses = row[8]
+        avg_response_time = row[4]
 
+        agg_request = Agg_Request(call_code=call_code,
+                  success_count=success_count,
+                  block_count=block_count,
+                  other_count=other_count,
+                  total_responses=total_responses,
+                  avg_response_time=avg_response_time)
 
-#         agg_request = Agg_Request(call_code=call_code,
-#                   success_count=success_count,
-#                   block_count=block_count,
-#                   other_count=other_count,
-#                   total_responses=total_responses,
-#                   avg_response_time=avg_response_time)
+        # We need to add to the session or it won't ever be stored
+        db.session.add(agg_request)
 
-#         # We need to add to the session or it won't ever be stored
-#         db.session.add(call)
-
-#     # Once we're done, we should commit our work
-#     db.session.commit()
+    # Once we're done, we should commit our work
+    db.session.commit()
 
 
 if __name__ == "__main__":
@@ -203,5 +216,5 @@ if __name__ == "__main__":
     load_env(data)
     load_api(data)
     load_call(data)
-    # load_agg_request(data)
+    load_agg_request(data)
     # load_requests()
