@@ -2,3 +2,6 @@ Method,Endpoint,Service,Plan,Average Latency (ms),Successful,Blocked,Other,Total
 v2 lists,Contact List Resource,AppConnect Production,Partner API Access - for Partners ONLY,188.47,16472783,175,681494,17154452
 v2 emailmarketing,Email Campaign Resource,AppConnect D1,Partner API Access - for Partners ONLY,870.95,4123825,448,175836,4300109
 v2 emailmarketing,Email Campaign Resource,AppConnect Production,Internal API Access,696.053,3371065,0,123938,3495003
+v2 signupform,Signup Form,Appconnect Production - Signup Form,Partner API Access - for Partners ONLY,1012,1,0,0,1
+v2 partner accounts plan,Partner Account Resource,Appconnect L1 - Partner,Internal API Access,999.973,71,0,39,110
+v2 lists,Contact Lists - Collection,AppConnect D1 - Contacts,Internal API Access,958.11,35,0,0,35
