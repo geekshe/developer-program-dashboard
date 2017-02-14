@@ -1,0 +1,229 @@
+Method,Endpoint,Service,Plan,Average Latency (ms),Successful,Blocked,Other,Total
+emailmarketing tracking bounces,Email Campaign - Bounces,Appconnect Stage - Email Campaign,Internal API Access,269.77,34,0,40,74
+emailmarketing tracking bounces,Email Campaign - Bounces,Appconnect L1 - Email Campaign,Internal API Access,287.92,34,0,40,74
+emailmarketing tracking bouncessss,Email Campaign - Bounces,Appconnect Stage - Email Campaign,Internal API Access,64.5,0,0,2,2
+emailmarketing tracking clicks,Email Campaign - Clicks-by-link,Appconnect Stage - Email Campaign,Internal API Access,196.6,12,0,32,44
+emailmarketing tracking clicks,Email Campaign - Clicks,Appconnect Stage - Email Campaign,Internal API Access,341.4,10,0,4,14
+emailmarketing tracking clicks,Email Campaign - Clicks-by-link,Appconnect L1 - Email Campaign,Internal API Access,166.5,7,0,31,38
+emailmarketing tracking forwards,Email Campaigns - Forwards,Appconnect L1 - Email Campaign,Internal API Access,271.81,31,0,36,67
+emailmarketing tracking forwards,Email Campaign - Forwards,Appconnect Stage - Email Campaign,Internal API Access,241.89,24,0,32,56
+emailmarketing tracking forwardsss,Email Campaign - Forwards,Appconnect Stage - Email Campaign,Internal API Access,63,0,0,2,2
+emailmarketing tracking forwardsss,Email Campaigns - Forwards,Appconnect L1 - Email Campaign,Internal API Access,132,0,0,1,1
+emailmarketing tracking opens,Email Campaign - Opens,Appconnect Stage - Email Campaign,Internal API Access,264.71,22,0,22,44
+emailmarketing tracking opens,Email Campaign - Opens,Appconnect L1 - Email Campaign,Internal API Access,376.1,21,0,10,31
+emailmarketing tracking openssss,Email Campaign - Opens,Appconnect Stage - Email Campaign,Internal API Access,65.5,0,0,2,2
+emailmarketing tracking reports summary,Email Campaign - Summary,Appconnect Stage - Email Campaign,Internal API Access,139,2,0,2,4
+emailmarketing tracking sends,Email Campaign - Sends,Appconnect Stage - Email Campaign,Internal API Access,400.22,26,0,20,46
+emailmarketing tracking sends,Email Campaign - Sends,Appconnect L1 - Email Campaign,Internal API Access,408.11,26,0,10,36
+emailmarketing tracking sendsss,Email Campaign - Sends,Appconnect Stage - Email Campaign,Internal API Access,64,0,0,2,2
+emailmarketing tracking unsubscribes,Email Campaign - Unsubscribes,Appconnect L1 - Email Campaign,Internal API Access,283.12,25,0,26,51
+emailmarketing tracking unsubscribes,Email Campaign - Unsubscribes,Appconnect Stage - Email Campaign,Internal API Access,250.52,22,0,30,52
+emailmarketing tracking unsubscribessss,Email Campaign - Unsubscribes,Appconnect Stage - Email Campaign,Internal API Access,63.5,0,0,2,2
+eventspot events,Events Resource,AppConnect Production,Standard API Access,140.118,49562,152,10,49724
+eventspot events,Events Collection,AppConnect Production,Standard API Access,268.185,30783,102,20,30905
+eventspot events,Events Collection,AppConnect Production,Partner API Access - for Partners ONLY,176.558,15216,0,584,15800
+eventspot events,Events Resource,AppConnect Production,Internal API Access,161.103,15149,0,1,15150
+eventspot events,Events Resource,AppConnect Production,Partner API Access - for Partners ONLY,160.407,11028,0,1,11029
+eventspot events fees,Events Resource,AppConnect Production,Standard API Access,162.61,394,0,9,403
+eventspot events fees,Events Resource,AppConnect Production,Partner API Access - for Partners ONLY,128.6,107,0,0,107
+eventspot events items,Events Resource,AppConnect Production,Partner API Access - for Partners ONLY,171.49,132,0,0,132
+eventspot events items,Events Resource,AppConnect Production,Standard API Access,121.1,27,0,4,31
+eventspot events promocodes,Events Resource,AppConnect Production,Partner API Access - for Partners ONLY,126.59,509,0,19,528
+eventspot events promocodes,Events Resource,AppConnect Production,Standard API Access,192,0,0,1,1
+eventspot events registrants,Events Resource,AppConnect Production,Standard API Access,395.855,225485,6933,30,232448
+eventspot events registrants,Events Resource,AppConnect Production,Partner API Access - for Partners ONLY,273.653,1166,0,0,1166
+mashery account,Get Access Token,Mashery Service L1,Internal API Access,66.47,34,0,0,34
+mashery keys,Get Access Token,Mashery Service L1,Internal API Access,54.401,312,0,0,312
+v2 account info,AccountInfo,AppConnect Production,Partner API Access - for Partners ONLY,143.464,401298,4,42576,443878
+v2 account info,AccountInfo,AppConnect Production,Internal API Access,133.906,204265,0,671,204936
+v2 account info,AccountInfo,AppConnect Production,Standard API Access,126.011,29127,27,51,29205
+v2 account info,Account Summary,Appconnect Stage - Accounts,Internal API Access,123.842,3208,0,76,3284
+v2 account info,Account Summary,Appconnect L1 - Accounts,Internal API Access,119.1,86,0,92,178
+v2 account productsinfo,Product Info,AppConnect Production,Internal API Access,144.281,7611,0,1232,8843
+v2 account productsinfo,product info,Appconnect L1 - Accounts,Internal API Access,132.4,9,0,0,9
+v2 account productsinfo,Product Info,AppConnect Stage,Internal API Access,176.7,6,0,0,6
+v2 account user,Account User Specific Privileges,AppConnect Production,Partner API Access - for Partners ONLY,108.8,36,0,0,36
+v2 account user,Account User Specific Privileges,AppConnect Production,Standard API Access,88.29,14,0,0,14
+v2 account user,Account User Specific Privileges,Appconnect Stage - Accounts,Internal API Access,84,6,0,6,12
+v2 account user,Account User Specific Privileges,Appconnect L1 - Accounts,Internal API Access,303.5,3,0,3,6
+v2 account verifiedemailaddresses,Verified Email,AppConnect Production,Internal API Access,95.617,132316,0,702,133018
+v2 account verifiedemailaddresses,Verified Email,AppConnect Production,Standard API Access,99.31,3372,39,39,3450
+v2 account verifiedemailaddresses,Verified Email,AppConnect Production,Partner API Access - for Partners ONLY,149.066,3271,3,8,3282
+v2 account verifiedemailaddresses,Account Email Addresses,Appconnect L1 - Accounts,Internal API Access,89.49,38,0,41,79
+v2 account verifiedemailaddresses,Account Email Addresses,Appconnect Stage - Accounts,Internal API Access,101.1,28,0,30,58
+v2 account verifiedemailaddresses,Account Update Email Address,Appconnect Stage - Accounts,Internal API Access,160.6,14,0,2,16
+v2 account verifiedemailaddresses,Account Update Email Address,Appconnect L1 - Accounts,Internal API Access,139.8,11,0,2,13
+v2 activities,Bulk Activities,AppConnect Production,Partner API Access - for Partners ONLY,586.622,227849,35364,1173,264386
+v2 activities,Bulk Activities,AppConnect Production,Standard API Access,306.86,60266,70864,1657,132787
+v2 activities,Bulk Activities Report,AppConnect Production,Standard API Access,454.242,1341,1,12,1354
+v2 activities,Bulk Activities - Status Individual,AppConnect Stage - Bulk Activities,Internal API Access,137.01,1003,0,6,1009
+v2 activities,Bulk Activities,AppConnect Production,Internal API Access,826.476,934,0,0,934
+v2 activities,Bulk Activities - Status Individual,AppConnect L1 - Bulk Activities,Internal API Access,152.19,524,0,9,533
+v2 activities,Bulk Activities - Status Collection,AppConnect Stage - Bulk Activities,Internal API Access,181.29,194,0,4,198
+v2 activities,Bulk Activities Report,AppConnect Production,Partner API Access - for Partners ONLY,535.88,93,0,0,93
+v2 activities,Bulk Activities - Status Collection,AppConnect L1 - Bulk Activities,Internal API Access,292,27,0,6,33
+v2 activities addcontacts,Bulk Activities - Add and Update Contacts,AppConnect L1 - Bulk Activities,Internal API Access,529.517,271,0,178,449
+v2 activities addcontacts,Bulk Activities - Add and Update Contacts,AppConnect Stage - Bulk Activities,Internal API Access,469.954,231,0,92,323
+v2 activities addcontacts,Bulk Activities - Add and Update Contacts,AppConnect F1 - Bulk Activities,Internal API Access,872,0,0,1,1
+v2 activities clearlists,Bulk Activities - Clear Contact Lists,AppConnect L1 - Bulk Activities,Internal API Access,298.2,17,0,11,28
+v2 activities clearlists,Bulk Activities - Clear Contact Lists,AppConnect Stage - Bulk Activities,Internal API Access,269.8,10,0,6,16
+v2 activities exportcontacts,Bulk Activities - Export Contacts,AppConnect L1 - Bulk Activities,Internal API Access,324.94,18,0,15,33
+v2 activities exportcontacts,Bulk Activities - Export Contacts,AppConnect Stage - Bulk Activities,Internal API Access,276.1,16,0,12,28
+v2 activities exportfiles,Bulk Activities - Export Contacts Endpoint,AppConnect Stage - Bulk Activities,Internal API Access,176.1,12,0,0,12
+v2 activities exportfiles,Bulk Activities - Export Contacts Endpoint,AppConnect L1 - Bulk Activities,Internal API Access,185.3,12,0,0,12
+v2 activities removefromlists,Bulk Activities - Remove Contacts,AppConnect Stage - Bulk Activities,Internal API Access,220.28,22,0,24,46
+v2 activities removefromlists,Bulk Activities - Remove Contacts,AppConnect L1 - Bulk Activities,Internal API Access,185.92,22,0,40,62
+v2 contacts,Contacts Collection,AppConnect Production,Partner API Access - for Partners ONLY,347.693,1808151,36702,761786,2606639
+v2 contacts,Contacts Collection,AppConnect Production,Standard API Access,195.057,1648496,3041842,397657,5087995
+v2 contacts,Contact Resource,AppConnect Production,Partner API Access - for Partners ONLY,355.46,1216424,72622,588716,1877762
+v2 contacts,Contact Resource,AppConnect Production,Standard API Access,653.277,563835,111744,49347,724926
+v2 contacts,Contacts Collection,AppConnect Production,Internal API Access,747.511,230376,0,1175,231551
+v2 contacts,Contact Resource,AppConnect Production,Internal API Access,517.755,139663,0,5751,145414
+v2 contacts,Contacts - Collection,AppConnect Stage - Contacts,Internal API Access,394.703,6357,0,240,6597
+v2 contacts,Contacts - Individual,AppConnect Stage - Contacts,Internal API Access,315.559,2130,0,180,2310
+v2 contacts,Contacts - Collection,AppConnect L1 - Contacts,Internal API Access,778.756,1191,0,123,1314
+v2 contacts,Contacts - Individual,AppConnect L1 - Contacts,Internal API Access,662.581,425,0,24,449
+v2 contacts,Contacts - Collection,AppConnect F1 - Contacts,Internal API Access,1334.8,9,0,0,9
+v2 contacts,Contacts - Individual,AppConnect F1 - Contacts,Internal API Access,262.3,9,0,0,9
+v2 contacts,Contacts - Collection,AppConnect D1 - Contacts,Internal API Access,3401.4,7,0,0,7
+v2 contacts,Contacts - Individual,AppConnect D1 - Contacts,Internal API Access,647.1,7,0,0,7
+v2 contacts lists,List For an Individual Contact,AppConnect L1 - Contacts,Internal API Access,718.4,80,0,0,80
+v2 contacts lists,List For an Individual Contact,AppConnect Stage - Contacts,Internal API Access,676.24,74,0,6,80
+v2 contacts lists,Individual List For an Individual Contact,AppConnect Stage - Contacts,Internal API Access,827.2,44,0,2,46
+v2 contacts lists,Individual List For an Individual Contact,AppConnect L1 - Contacts,Internal API Access,701,20,0,1,21
+v2 contacts tracking,Contact Tracking - Report,AppConnect L1 - Contacts,Internal API Access,439.7,12,0,0,12
+v2 contacts tracking,Contact Tracking - Report,AppConnect Stage - Contacts,Internal API Access,355.2,6,0,0,6
+v2 contacts tracking bounces,Contact Tracking Bounces,AppConnect L1 - Contacts,Internal API Access,227.86,53,0,48,101
+v2 contacts tracking bounces,Contact Tracking Bounces,AppConnect Stage - Contacts,Internal API Access,241.39,28,0,24,52
+v2 contacts tracking bouncessss,Contact Tracking Bounces,AppConnect Stage - Contacts,Internal API Access,63.5,0,0,2,2
+v2 contacts tracking bouncessss,Contact Tracking Bounces,AppConnect L1 - Contacts,Internal API Access,77.8,0,0,4,4
+v2 contacts tracking clicks,Contact Tracking Clicks,AppConnect L1 - Contacts,Internal API Access,181.96,26,0,45,71
+v2 contacts tracking clicks,Contact Tracking Clicks,AppConnect Stage - Contacts,Internal API Access,214.3,12,0,22,34
+v2 contacts tracking clicksssss,Contact Tracking Clicks,AppConnect Stage - Contacts,Internal API Access,59,0,0,2,2
+v2 contacts tracking clicksssss,Contact Tracking Clicks,AppConnect L1 - Contacts,Internal API Access,80.6,0,0,5,5
+v2 contacts tracking forwards,Contact Tracking Forwards,AppConnect L1 - Contacts,Internal API Access,187.66,31,0,45,76
+v2 contacts tracking forwards,Contact Tracking Forwards,AppConnect Stage - Contacts,Internal API Access,211.4,14,0,22,36
+v2 contacts tracking forwardssss,Contact Tracking Forwards,AppConnect Stage - Contacts,Internal API Access,61,0,0,2,2
+v2 contacts tracking forwardssss,Contact Tracking Forwards,AppConnect L1 - Contacts,Internal API Access,80.2,0,0,5,5
+v2 contacts tracking opens,Contact Tracking Opens,AppConnect L1 - Contacts,Internal API Access,184.82,26,0,45,71
+v2 contacts tracking opens,Contact Tracking Opens,AppConnect Stage - Contacts,Internal API Access,209.9,12,0,22,34
+v2 contacts tracking openss,Contact Tracking Opens,AppConnect Stage - Contacts,Internal API Access,65,0,0,2,2
+v2 contacts tracking openss,Contact Tracking Opens,AppConnect L1 - Contacts,Internal API Access,68.2,0,0,5,5
+v2 contacts tracking reports summary,Contact Tracking Summary,AppConnect L1 - Contacts,Internal API Access,280,3,0,0,3
+v2 contacts tracking reports summary,Contact Tracking Summary,AppConnect Stage - Contacts,Internal API Access,276,2,0,0,2
+v2 contacts tracking reports summaryByCampaign,Contact Summary Report Sorted by Campaign,AppConnect L1 - Contacts,Internal API Access,270.4,10,0,5,15
+v2 contacts tracking reports summaryByCampaign,Contact Summary Report Sorted by Campaign,AppConnect Stage - Contacts,Internal API Access,262.8,4,0,2,6
+v2 contacts tracking reports summaryByCampaignnnnn,Contact Summary Report Sorted by Campaign,AppConnect Stage - Contacts,Internal API Access,68.5,0,0,2,2
+v2 contacts tracking reports summaryByCampaignnnnn,Contact Summary Report Sorted by Campaign,AppConnect L1 - Contacts,Internal API Access,80,0,0,5,5
+v2 contacts tracking sends,Contact Tracking Sends,AppConnect Stage - Contacts,Internal API Access,188.2,10,0,22,32
+v2 contacts tracking sendsss,Contact Tracking Sends,AppConnect Stage - Contacts,Internal API Access,104,0,0,2,2
+v2 contacts tracking unsubscribes,Contact Tracking Unsubscribes,AppConnect L1 - Contacts,Internal API Access,231.4,14,0,33,47
+v2 contacts tracking unsubscribes,Contact Tracking Unsubscribes,AppConnect Stage - Contacts,Internal API Access,254.1,6,0,16,22
+v2 contacts tracking unsubscribessss,Contact Tracking Unsubscribes,AppConnect Stage - Contacts,Internal API Access,80,0,0,2,2
+v2 contacts tracking unsubscribessss,Contact Tracking Unsubscribes,AppConnect L1 - Contacts,Internal API Access,88.4,0,0,5,5
+v2 emailmarketing,Email Campaign Resource,AppConnect Production,Partner API Access - for Partners ONLY,870.95,4123825,448,175836,4300109
+v2 emailmarketing,Email Campaign Resource,AppConnect Production,Internal API Access,696.053,3371065,0,123938,3495003
+v2 emailmarketing,Email Campaign Resource,AppConnect Production,Standard API Access,860.586,1118501,5214,23216,1146931
+v2 emailmarketing,Email Campaigns Collection,AppConnect Production,Internal API Access,184.849,273874,0,604,274478
+v2 emailmarketing,Email Campaigns Collection,AppConnect Production,Partner API Access - for Partners ONLY,238.506,167568,15,1227,168810
+v2 emailmarketing,Email Campaigns Collection,AppConnect Production,Standard API Access,294.552,157401,24421,2599,184421
+v2 emailmarketing campaigns,Email Campaign - Collection,Appconnect Stage - Email Campaign,Internal API Access,246.431,3307,0,603,3910
+v2 emailmarketing campaigns,Email Campaign - Individual,Appconnect Stage - Email Campaign,Internal API Access,213.256,3026,0,304,3330
+v2 emailmarketing campaigns,Email Campaign - Individual,Appconnect L1 - Email Campaign,Internal API Access,200.781,1311,0,258,1569
+v2 emailmarketing campaigns,Email Campaign - Collection,Appconnect L1 - Email Campaign,Internal API Access,492.097,730,0,447,1177
+v2 emailmarketing campaigns,Email Campaign - Collection,Appconnect F1 - Email Campaign,Internal API Access,1037,9,0,0,9
+v2 emailmarketing campaigns,Email Campaign - Individual,Appconnect F1 - Email Campaign,Internal API Access,308,9,0,0,9
+v2 emailmarketing campaigns,Email Campaign - Collection,Appconnect D1 - Email Campaign,Internal API Access,3239.1,7,0,0,7
+v2 emailmarketing campaigns,Email Campaign - Individual,Appconnect D1 - Email Campaign,Internal API Access,352.1,7,0,0,7
+v2 emailmarketing campaigns preview,Email Campaign Preview,Appconnect Stage - Email Campaign,Internal API Access,807.518,3173,0,14,3187
+v2 emailmarketing campaigns preview,Email Campaign Preview,Appconnect L1 - Email Campaign,Internal API Access,170.6,2,0,14,16
+v2 emailmarketing campaigns schedules,Email Campaign Scheduling - Collection,Appconnect L1 - Email Campaign,Internal API Access,273.456,443,0,42,485
+v2 emailmarketing campaigns schedules,Email Campaign Scheduling - Collection,Appconnect Stage - Email Campaign,Internal API Access,260.727,361,0,42,403
+v2 emailmarketing campaigns schedules,Email Campaign Scheduling - Individual,Appconnect L1 - Email Campaign,Internal API Access,184.95,77,0,70,147
+v2 emailmarketing campaigns schedules,Email Campaign Scheduling - Individual,Appconnect Stage - Email Campaign,Internal API Access,181.06,66,0,56,122
+v2 emailmarketing campaigns tests,Email Campaign Test Send,Appconnect Stage - Email Campaign,Internal API Access,446.14,24,0,26,50
+v2 emailmarketing campaigns tests,Email Campaign Test Send,Appconnect L1 - Email Campaign,Internal API Access,471.23,22,0,26,48
+v2 eventspot events,Events - Collection,Appconnect Stage - Events,Internal API Access,246.523,2176,0,46,2222
+v2 eventspot events,Events - Collection,Appconnect L1 - Events,Internal API Access,232.804,1065,0,38,1103
+v2 eventspot events,Events - Individual,Appconnect Stage - Events,Internal API Access,206.7,14,0,11,25
+v2 eventspot events,Events - Individual,Appconnect L1 - Events,Internal API Access,269.3,7,0,9,16
+v2 eventspot events fees,Event Fees - Collection,Appconnect Stage - Events,Internal API Access,131.8,34,0,22,56
+v2 eventspot events fees,Event Fees - Collection,Appconnect L1 - Events,Internal API Access,99.32,18,0,44,62
+v2 eventspot events fees,Event Fees - Individual,Appconnect Stage - Events,Internal API Access,160,10,0,0,10
+v2 eventspot events fees,Event Fees - Individual,Appconnect L1 - Events,Internal API Access,91.5,6,0,0,6
+v2 eventspot events items,Event Items - Collection,Appconnect Stage - Events,Internal API Access,118.4,26,0,42,68
+v2 eventspot events items,Event Items - Collection,Appconnect L1 - Events,Internal API Access,96.02,15,0,32,47
+v2 eventspot events items,Event Items - Individual,Appconnect Stage - Events,Internal API Access,137.6,10,0,0,10
+v2 eventspot events items,Event Items - Individual,Appconnect L1 - Events,Internal API Access,131,5,0,0,5
+v2 eventspot events items attributes,Event Item Attributes - Collection,Appconnect Stage - Events,Internal API Access,101.2,12,0,32,44
+v2 eventspot events items attributes,Event Item Attributes - Individual,Appconnect Stage - Events,Internal API Access,136,6,0,0,6
+v2 eventspot events items attributes,Event Item Attributes - Collection,Appconnect L1 - Events,Internal API Access,92.27,6,0,38,44
+v2 eventspot events items attributes,Event Item Attributes - Individual,Appconnect L1 - Events,Internal API Access,123,3,0,0,3
+v2 eventspot events promocodes,Event Promocodes - Collection,Appconnect Stage - Events,Internal API Access,114.6,28,0,40,68
+v2 eventspot events promocodes,Event Promocodes - Individual,Appconnect Stage - Events,Internal API Access,143.6,14,0,0,14
+v2 eventspot events promocodes,Event Promocodes - Collection,Appconnect L1 - Events,Internal API Access,91.18,10,0,34,44
+v2 eventspot events promocodes,Event Promocodes - Individual,Appconnect L1 - Events,Internal API Access,98.7,6,0,0,6
+v2 eventspot events registrants,Event Registrants - Collection,Appconnect Stage - Events,Internal API Access,250,2,0,0,2
+v2 eventspot events registrants,Event Registrants - Collection,Appconnect L1 - Events,Internal API Access,130,1,0,0,1
+v2 library files,My Library files collection,AppConnect Production,Internal API Access,116.553,600426,0,253,600679
+v2 library files,My library files resource,AppConnect Production,Internal API Access,103.183,5887,0,0,5887
+v2 library files,My Library files collection,AppConnect Production,Standard API Access,161.432,941,1,8,950
+v2 library files,My library files resource,AppConnect Production,Standard API Access,96.262,625,0,1392,2017
+v2 library files,MyLibrary Files Collection,Appconnect Stage - MyLibrary,Internal API Access,241.971,430,0,16,446
+v2 library files,MyLibrary Files Collection,Appconnect L1 - MyLibrary,Internal API Access,190.43,180,0,2,182
+v2 library files,MyLibrary File Resource,Appconnect Stage - MyLibrary,Internal API Access,117.2,48,0,16,64
+v2 library files,MyLibrary File Resource,Appconnect L1 - MyLibrary,Internal API Access,113,4,0,2,6
+v2 library files uploadstatus,MyLibrary FileUpload Status,Appconnect Stage - MyLibrary,Internal API Access,102.23,193,0,2,195
+v2 library files uploadstatus,MyLibrary FileUpload Status,Appconnect L1 - MyLibrary,Internal API Access,132.76,186,0,0,186
+v2 library folders,My library folders collection,AppConnect Production,Internal API Access,104.163,94226,0,316,94542
+v2 library folders,MyLibrary Folder Collection,Appconnect Stage - MyLibrary,Internal API Access,96.617,1201,0,6,1207
+v2 library folders,MyLibrary Folder Collection,Appconnect L1 - MyLibrary,Internal API Access,82.93,541,0,3,544
+v2 library folders,MyLibrary Folder Resource,Appconnect Stage - MyLibrary,Internal API Access,88.811,94,0,38,132
+v2 library folders,My library folder resource,AppConnect Production,Internal API Access,133,74,0,0,74
+v2 library folders,My library folders collection,AppConnect Production,Standard API Access,95.41,50,0,1,51
+v2 library folders,MyLibrary Folder Resource,Appconnect L1 - MyLibrary,Internal API Access,69.88,48,0,24,72
+v2 library folders,My library folder resource,AppConnect Production,Standard API Access,102.4,10,0,4,14
+v2 library folders files,MyLibrary Files Collection for a FolderID,Appconnect Stage - MyLibrary,Internal API Access,83.4,4,0,4,8
+v2 library folders trash files,MyLibrary Folders Trash Files,Appconnect Stage - MyLibrary,Internal API Access,116.7,12,0,0,12
+v2 library info,MyLibrary Info,AppConnect Production,Internal API Access,400.79,104,0,0,104
+v2 library info,MyLibrary Usage Information,Appconnect Stage - MyLibrary,Internal API Access,269.1,10,0,0,10
+v2 library info,MyLibrary Usage Information,Appconnect L1 - MyLibrary,Internal API Access,468.5,4,0,0,4
+v2 library info,MyLibrary Info,AppConnect Production,Standard API Access,220,2,0,0,2
+v2 lists,Contact List Resource,AppConnect Production,Partner API Access - for Partners ONLY,188.47,16472783,175,681494,17154452
+v2 lists,Contact Lists Collection,AppConnect Production,Partner API Access - for Partners ONLY,260.03,1218125,2596,8398,1229119
+v2 lists,Contact Lists Collection,AppConnect Production,Standard API Access,211.742,1196314,242814,196901,1636029
+v2 lists,Contact List Resource,AppConnect Production,Standard API Access,579.625,338219,169660,42431,550310
+v2 lists,Contact Lists Collection,AppConnect Production,Internal API Access,237.114,209819,0,13551,223370
+v2 lists,Contact Lists - Collection,AppConnect Stage - Contacts,Internal API Access,256.911,6197,0,94,6291
+v2 lists,Contact Lists - Collection,AppConnect L1 - Contacts,Internal API Access,300.4,4590,0,104,4694
+v2 lists,Contact Lists - Individual,AppConnect Stage - Contacts,Internal API Access,180.761,868,0,102,970
+v2 lists,Contact List Resource,AppConnect Production,Internal API Access,190.29,86,0,1,87
+v2 lists,Contact Lists - Individual,AppConnect L1 - Contacts,Internal API Access,146.22,85,0,120,205
+v2 lists,Contact Lists - Collection,AppConnect F1 - Contacts,Internal API Access,314.11,46,0,0,46
+v2 lists,Contact Lists - Collection,AppConnect D1 - Contacts,Internal API Access,958.11,35,0,0,35
+v2 lists,Contact Lists - Individual,AppConnect F1 - Contacts,Internal API Access,240.1,9,0,0,9
+v2 lists,Contact Lists - Individual,AppConnect D1 - Contacts,Internal API Access,952.6,7,0,0,7
+v2 lists contacts,Contact List Membership,AppConnect Stage - Contacts,Internal API Access,305.98,94,0,28,122
+v2 lists contacts,Contact List Membership,AppConnect L1 - Contacts,Internal API Access,323.94,60,0,26,86
+v2 lists encodedlistmembers,Contact List Encoded List Members,AppConnect L1 - Contacts,Internal API Access,229,24,0,4,28
+v2 lists encodedlistmembers,Contact List Encoded List Members,AppConnect Stage - Contacts,Internal API Access,288,12,0,2,14
+v2 partner accounts,Partner Accounts,AppConnect Production,Partner API Access - for Partners ONLY,241.255,353,0,336,689
+v2 partner accounts,Partner Accounts,AppConnect Production,Internal API Access,397.006,312,0,229,541
+v2 partner accounts,Partner Accounts,Appconnect L1 - Partner,Internal API Access,437.959,208,0,183,391
+v2 partner accounts,Partner Accounts,Appconnect Stage - Partner,Internal API Access,391.01,82,0,88,170
+v2 partner accounts,Partner Account Resource,AppConnect Production,Partner API Access - for Partners ONLY,389.6,13,0,10,23
+v2 partner accounts,Partner Accounts,Appconnect Stage - Partner,Non-Partner Internal API Access,17,0,2,0,2
+v2 partner accounts plan,Partner Account Resource,AppConnect Production,Internal API Access,367.498,320134,0,3175,323309
+v2 partner accounts plan,Partner Account Resource,Appconnect Stage - Partner,Internal API Access,569.544,116,0,88,204
+v2 partner accounts plan,Partner Account Resource,Appconnect L1 - Partner,Internal API Access,999.973,71,0,39,110
+v2 partner accounts plan,Partner Account Resource,AppConnect Production,Partner API Access - for Partners ONLY,6688.45,18,0,13,31
+v2 partner accounts status,Partner Account Resource,AppConnect Production,Internal API Access,248.533,228,0,3880,4108
+v2 partner accounts status,Partner Account Resource,AppConnect Production,Partner API Access - for Partners ONLY,118.104,21,0,5202,5223
+v2 partner accounts status,Partner Account Resource,Appconnect Stage - Partner,Internal API Access,519.68,20,0,8,28
+v2 partner accounts status,Partner Account Resource,Appconnect L1 - Partner,Internal API Access,136.2,10,0,20,30
+v2 signupform,Signup Form,Appconnect Production - Signup Form,Internal API Access,183.86,162,0,4,166
+v2 signupform,Signup Form,Appconnect L1 - Signup Form,Internal API Access,212.9,28,0,40,68
+v2 signupform,SIgnup Form,Appconnect Stage - Signup Form,Internal API Access,175.3,14,0,32,46
+v2 signupform,Signup Form,Appconnect Production - Signup Form,Standard API Access,225.4,3,0,2,5
+v2 signupform,Signup Form,Appconnect Production - Signup Form,Partner API Access - for Partners ONLY,1012,1,0,0,1
+webhooks partner topics,API-ANS Topic Id,API-ANS Stage - Topics,Internal API Access,111.7,0,0,22,22
