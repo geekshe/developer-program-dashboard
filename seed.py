@@ -18,6 +18,36 @@ def read_data_file():
 
     return list(csv_f)
 
+def create_call_code(row):
+
+    if "list" in row[0]:
+        call_code_prefix = 'lists'
+    elif "email" in row[0]:
+        call_code_prefix = 'email'
+    elif "contact" in row[0]:
+        call_code_prefix = 'contacts'
+    elif "eventspot" in row[0]:
+        call_code_prefix = 'events'
+    elif "info" in row[0]:
+        call_code_prefix = 'account'
+    elif "verified" in row[0]:
+        call_code_prefix = 'email_ver'
+    else:
+        call_code_prefix = 'other'
+
+    if "Production" in row[2]:
+        call_code_suffix = 'prod'
+    elif "Stage" in row[2]:
+        call_code_suffix = 'stage'
+    elif "L1" in row[2]:
+        call_code_suffix = 'l1'
+    elif "D1" in row[2]:
+        call_code_suffix = 'd1'
+    else:
+        call_code_suffix = 'other'
+
+    call_code = "{}: {}".format(call_code_prefix, call_code_suffix)
+    return call_code
 
 def load_env(data):
     """Load API values. In this case, they don't come from the CSV file, but
@@ -55,10 +85,9 @@ def load_api(data):
     """Load values relating to the API as a whole."""
 
     # [[TODO: Merge identical lines into the DB]]
-    # [[TODO: Skip header row]]
 
     # Read data from csv file and insert rows
-    # header_row = next(data)  // Syntax to skip header not working on list
+    # But skip the header row: data[0]
     for row in data[1:]:
 
         api_name = 'Constant Contact API'
@@ -93,52 +122,34 @@ def load_call(data):
     """Load values for an individual API call"""
 
     # Read data from csv file and insert rows
-    header_row = next(data)
+    # But skip the header row: data[0]
+    for row in data[1:]:
 
-    for row in data:
+        call_code = create_call_code(row)
+        call_name = row[1]
+        api_id = 1
+
         if "list" in row[0]:
-            call_code_prefix = 'lists'
             endpoint = '/lists'
             method = 'GET'
         elif "email" in row[0]:
-            call_code_prefix = 'email'
             endpoint = '/emailmarketing'
             method = 'GET'
         elif "contact" in row[0]:
-            call_code_prefix = 'contacts'
             endpoint = '/contacts'
             method = 'GET'
         elif "eventspot" in row[0]:
-            call_code_prefix = 'events'
             endpoint = '/eventspot'
             method = 'GET'
         elif "info" in row[0]:
-            call_code_prefix = 'account'
             endpoint = '/account/info'
             method = 'GET'
         elif "verified" in row[0]:
-            call_code_prefix = 'email_ver'
             endpoint = '/account/verifiedemailaddresses'
             method = 'GET'
         else:
-            call_code_prefix = 'other'
             endpoint = None
             method = None
-
-        if "Production" in row[2]:
-            call_code_suffix = 'prod'
-        elif "Stage" in row[2]:
-            call_code_suffix = 'stage'
-        elif "L1" in row[2]:
-            call_code_suffix = 'l1'
-        elif "D1" in row[2]:
-            call_code_suffix = 'd1'
-        else:
-            call_code_suffix = 'other'
-
-        call_code = "{}: {}".format(call_code_prefix, call_code_suffix)
-        call_name = row[1]
-        api_id = 1
 
         call = Call(call_code=call_code,
                   call_name=call_name,
@@ -188,6 +199,7 @@ if __name__ == "__main__":
 
     # Import different types of data
     data = read_data_file()
+    # create_call_code(data)
     load_env(data)
     load_api(data)
     load_call(data)
