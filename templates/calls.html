@@ -2,6 +2,17 @@
 {% block content %}
 
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<h1>API Calls by Volume (Production)</h1>
+
+  <!-- Identify where the chart should be drawn. -->
+<div id="myPieChart" style="width:400, height:300"></div> 
+<ul>
+  {% for call in calls %}
+  <li>{{call.call_name}}</li>
+  {% endfor %}
+</ul>
+
   <script type="text/javascript">
     google.charts.load('current', {packages: ['corechart']});
     google.charts.setOnLoadCallback(drawChart);
@@ -22,14 +33,4 @@
       chart.draw(data, null);
     }
   </script>
-
-<h1>API Calls by Volume (Production)</h1>
-
-  <!-- Identify where the chart should be drawn. -->
-  <div id="myPieChart" style="width:400, height:300" />
-<ul>
-  {% for call in calls %}
-  <li>call.call_name</li>
-  {% endfor %}
-</ul>
 {% endblock %}
