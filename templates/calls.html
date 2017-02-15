@@ -27,6 +27,9 @@
 
   <!-- Identify where the chart should be drawn. -->
   <div id="myPieChart" style="width:400, height:300" />
-
-
+<ul>
+  {% for call in calls %}
+  <li>call.call_name</li>
+  {% endfor %}
+</ul>
 {% endblock %}

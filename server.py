@@ -1,13 +1,13 @@
-"""Movie Ratings."""
+"""Developer Program Dashboard."""
 
 from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, redirect, request, flash, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
-import sqlalchemy
+from model import Environment, API, Call, Agg_Request, Request, connect_to_db, db
 
-from decimal import *
+import sqlalchemy
 
 app = Flask(__name__)
 
@@ -26,11 +26,14 @@ def index():
 
     return render_template("homepage.html")
 
+
 @app.route('/calls')
 def calls_by_volume():
     """Chart of API calls by volume."""
 
-    return render_template("calls.html")
+    calls = Call.query.filter(Call.call_code.like('%prod%')).all()
+
+    return render_template("calls.html", calls=calls)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
