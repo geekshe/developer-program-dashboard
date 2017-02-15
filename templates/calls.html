@@ -9,12 +9,12 @@
     function drawChart() {
       // Define the chart to be drawn.
       var data = new google.visualization.DataTable();
-      data.addColumn('string', 'Element');
-      data.addColumn('number', 'Percentage');
+      data.addColumn('string', 'Call');
+      data.addColumn('number', 'Percent Volume');
       data.addRows([
-        ['Nitrogen', 0.78],
-        ['Oxygen', 0.21],
-        ['Other', 0.01]
+        ['GetContacts', 0.81],
+        ['GetEmailCampaign', 0.16],
+        ['AddContacts', 0.02]
       ]);
 
       // Instantiate and draw the chart.
@@ -23,7 +23,7 @@
     }
   </script>
 
-<h1>API Calls by Volume</h1>
+<h1>API Calls by Volume (Production)</h1>
 
   <!-- Identify where the chart should be drawn. -->
   <div id="myPieChart" style="width:400, height:300" />
