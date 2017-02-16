@@ -7,15 +7,13 @@
 
   <!-- Identify where the chart should be drawn. -->
 <div id="myPieChart" style="width:400, height:300"></div> 
-<ul>
-  {% for call in calls %}
-  <li>{{call.call_name}}</li>
-  {% endfor %}
-</ul>
 
   <script type="text/javascript">
     google.charts.load('current', {packages: ['corechart']});
     google.charts.setOnLoadCallback(drawChart);
+
+
+
 
     function drawChart() {
       // Define the chart to be drawn.
@@ -23,9 +21,9 @@
       data.addColumn('string', 'Call');
       data.addColumn('number', 'Percent Volume');
       data.addRows([
-        ['GetContacts', 0.81],
-        ['GetEmailCampaign', 0.16],
-        ['AddContacts', 0.02]
+        {% for agg_request in agg_requests %}
+          ['{{agg_request[0].call_code}}', {{agg_request[0].success_count / agg_request[1]}}],
+        {% endfor %}
       ]);
 
       // Instantiate and draw the chart.
@@ -33,4 +31,5 @@
       chart.draw(data, null);
     }
   </script>
+
 {% endblock %}

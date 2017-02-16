@@ -8,6 +8,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from model import Environment, API, Call, Agg_Request, Request, connect_to_db, db
 
 import sqlalchemy
+from sqlalchemy import func
 
 app = Flask(__name__)
 
@@ -31,9 +32,11 @@ def index():
 def calls_by_volume():
     """Chart of API calls by volume."""
 
-    calls = Call.query.filter(Call.call_code.like('%prod%')).all()
+    sql_filter = '%prod%'
 
-    return render_template("calls.html", calls=calls)
+    agg_requests = db.session.query(Agg_Request, db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
+
+    return render_template("calls.html", agg_requests=agg_requests)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
