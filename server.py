@@ -8,7 +8,9 @@ from flask_debugtoolbar import DebugToolbarExtension
 from model import Environment, API, Call, Agg_Request, Request, connect_to_db, db
 
 import sqlalchemy
-from sqlalchemy import func
+# from sqlalchemy import func
+
+from decimal import Decimal
 
 app = Flask(__name__)
 
@@ -29,7 +31,14 @@ def index():
 
     sql_filter = '%prod%'
 
-    avg_latency = db.session.query(db.func.avg(Agg_Request.avg_response_time).label('avg_latency')).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
+    all_latency = db.session.query(Agg_Request.avg_response_time).filter(Agg_Request.call_code.like(sql_filter)).all()
+
+    total_latency = Decimal(0)
+
+    for latency in all_latency:
+        total_latency += latency[0]
+
+    avg_latency = total_latency / len(all_latency)
 
     return render_template("homepage.html", avg_latency=avg_latency)
 
