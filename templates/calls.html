@@ -22,7 +22,7 @@
       data.addColumn('number', 'Percent Volume');
       data.addRows([
         {% for agg_request in agg_requests %}
-          ['{{agg_request[0].call_code}}', {{agg_request[0].success_count / agg_request[1]}}],
+          ['{{agg_request.call_code}}', {{agg_request.success_count / env_total}}],
         {% endfor %}
       ]);
 

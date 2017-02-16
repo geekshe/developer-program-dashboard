@@ -34,9 +34,16 @@ def calls_by_volume():
 
     sql_filter = '%prod%'
 
-    agg_requests = db.session.query(Agg_Request, db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
+    agg_requests = db.session.query(Agg_Request).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
 
-    return render_template("calls.html", agg_requests=agg_requests)
+    success_totals = db.session.query(db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
+
+    env_total = 0
+
+    for success_total in success_totals:
+        env_total += success_total.total
+
+    return render_template("calls.html", agg_requests=agg_requests, env_total=env_total)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
