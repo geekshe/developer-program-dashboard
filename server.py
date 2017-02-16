@@ -20,17 +20,23 @@ app.secret_key = "ABC"
 # error.
 app.jinja_env.undefined = StrictUndefined
 
+################################################################################
+
 
 @app.route('/')
 def index():
     """Home page."""
 
-    return render_template("homepage.html")
+    sql_filter = '%prod%'
+
+    avg_latency = db.session.query(db.func.avg(Agg_Request.avg_response_time).label('avg_latency')).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
+
+    return render_template("homepage.html", avg_latency=avg_latency)
 
 
-@app.route('/calls')
-def calls_by_volume():
-    """Chart of API calls by volume."""
+@app.route('/env')
+def calls_by_env():
+    """Chart of API calls by environment."""
 
     sql_filter = '%prod%'
 
@@ -44,6 +50,26 @@ def calls_by_volume():
         env_total += success_total.total
 
     return render_template("calls.html", agg_requests=agg_requests, env_total=env_total)
+
+@app.route('/type')
+def calls_by_type():
+    """Chart of API calls by developer type."""
+
+    sql_filter = '%prod%'
+
+    agg_requests = db.session.query(Agg_Request).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
+
+    success_totals = db.session.query(db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
+
+    env_total = 0
+
+    for success_total in success_totals:
+        env_total += success_total.total
+
+    return render_template("calls.html", agg_requests=agg_requests, env_total=env_total)
+
+
+################################################################################
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

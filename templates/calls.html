@@ -6,13 +6,11 @@
 <h1>API Calls by Volume (Production)</h1>
 
   <!-- Identify where the chart should be drawn. -->
-<div id="myPieChart" style="width:400, height:300"></div> 
+<div id="ProdPieChart" style="width:400, height:300"></div> 
 
   <script type="text/javascript">
     google.charts.load('current', {packages: ['corechart']});
     google.charts.setOnLoadCallback(drawChart);
-
-
 
 
     function drawChart() {
@@ -27,7 +25,7 @@
       ]);
 
       // Instantiate and draw the chart.
-      var chart = new google.visualization.PieChart(document.getElementById('myPieChart'));
+      var chart = new google.visualization.PieChart(document.getElementById('ProdPieChart'));
       chart.draw(data, null);
     }
   </script>
