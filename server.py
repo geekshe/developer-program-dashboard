@@ -40,7 +40,21 @@ def index():
 
     avg_latency = total_latency / len(all_latency)
 
-    return render_template("homepage.html", avg_latency=avg_latency)
+    if avg_latency < 200:
+        overall_status = 'green'
+        status_icon = '/static/img/green_check.png'
+    elif 200 <= avg_latency < 800:
+        overall_status = 'yellow'
+        status_icon = '/static/img/yellow_exclamation.png'
+    elif avg_latency >= 800:
+        overall_status = 'red'
+        status_icon = '/static/img/red_x.png'
+
+    # Compare avg_latency to a range of values. 
+    # Based on place in range, choose green/yellow/red icon. 
+    # Pass icon to template.
+
+    return render_template("homepage.html", avg_latency=avg_latency, overall_status=overall_status, status_icon=status_icon)
 
 
 @app.route('/env')
