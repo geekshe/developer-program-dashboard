@@ -108,6 +108,11 @@ def calls_by_type():
 
     return render_template("calls.html", agg_requests=agg_requests, env_total=env_total)
 
+@app.route('/d3')
+def show_apps_customers():
+    """Show relationship of apps to their customers and vice versa."""
+
+    return render_template("d3.html")
 
 ################################################################################
 
