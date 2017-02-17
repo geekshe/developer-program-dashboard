@@ -19,8 +19,8 @@
       data.addColumn('string', 'Call');
       data.addColumn('number', 'Percent Volume');
       data.addRows([
-        {% for agg_request in agg_requests %}
-          ['{{agg_request.call_code}}', {{agg_request.success_count / env_total}}],
+        {% for agg_request in prod_agg_requests %}
+          ['{{agg_request.call_code}}', {{agg_request.success_count / prod_total}}],
         {% endfor %}
       ]);
 

@@ -22,8 +22,28 @@ app.secret_key = "ABC"
 # error.
 app.jinja_env.undefined = StrictUndefined
 
-################################################################################
+############################## Helper Functions ################################
 
+def get_agg_request(sql_filter):
+
+    # Retrieves agg_request objects for a specified environment
+    agg_requests = db.session.query(Agg_Request).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
+
+    return agg_requests
+
+def get_env_total(sql_filter):
+
+    success_totals = db.session.query(db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
+
+    env_total = 0
+
+    for success_total in success_totals:
+        env_total += success_total.total
+
+    return env_total
+
+
+############################### Flask Routes ###################################
 
 @app.route('/')
 def index():
@@ -61,18 +81,12 @@ def index():
 def calls_by_env():
     """Chart of API calls by environment."""
 
-    sql_filter = '%prod%'
+    # Retrieve agg_request objects for calls in the production environment
 
-    agg_requests = db.session.query(Agg_Request).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
+    prod_agg_requests = get_agg_request('%prod%')
+    prod_total = get_env_total('%prod%')
 
-    success_totals = db.session.query(db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
-
-    env_total = 0
-
-    for success_total in success_totals:
-        env_total += success_total.total
-
-    return render_template("calls.html", agg_requests=agg_requests, env_total=env_total)
+    return render_template("calls.html", prod_agg_requests=prod_agg_requests, prod_total=prod_total)
 
 @app.route('/type')
 def calls_by_type():
