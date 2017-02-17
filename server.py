@@ -1,21 +1,24 @@
 """Developer Program Dashboard."""
 
+############################### Import Modules #################################
 from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, redirect, request, flash, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import Environment, API, Call, Agg_Request, Request, connect_to_db, db
-
 import sqlalchemy
-# from sqlalchemy import func
 
 from decimal import Decimal
+
+# Import my data model
+from model import Environment, API, Call, Agg_Request, Request, connect_to_db, db
+
+################################# Web App ######################################
 
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
-app.secret_key = "ABC"
+app.secret_key = "lkkljasdienynfslkci"
 
 # Normally, if you use an undefined variable in Jinja2, it fails
 # silently. This is horrible. Fix this so that, instead, it raises an
@@ -62,13 +65,13 @@ def index():
 
     if avg_latency < 200:
         overall_status = 'green'
-        status_icon = '/static/img/green_check.png'
+        status_icon = 'fa-check-square'
     elif 200 <= avg_latency < 800:
         overall_status = 'yellow'
-        status_icon = '/static/img/yellow_exclamation.png'
+        status_icon = 'fa-exclamation'
     elif avg_latency >= 800:
         overall_status = 'red'
-        status_icon = '/static/img/red_x.png'
+        status_icon = 'fa-flash'
 
     # Compare avg_latency to a range of values. 
     # Based on place in range, choose green/yellow/red icon. 

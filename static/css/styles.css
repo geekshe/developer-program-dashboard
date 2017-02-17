@@ -32,12 +32,16 @@ body {
     padding: 10px;
     border: 1px;
     border-style: solid;
+    border-radius: 25px;
 }
 
 #status-icon {
   float: left;
   width: 15%;
   overflow: hidden;
+  border: 1px;
+  border-style: solid;
+  border-radius: 25px;
 }
 
 #status-message {
