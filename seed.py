@@ -1,6 +1,7 @@
 """Utility file to seed data from Mashery CSV data dump"""
 
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from model import Environment, API, Call, Agg_Request, Request
 
 from datetime import datetime
@@ -99,7 +100,9 @@ def load_api(data):
     # But skip the header row: data[0]
     for row in data[1:]:
 
-        api_name = 'Constant Contact API'
+        api_name = 'Ecommerce API'
+
+        # Set the env_id based on env type
         if "Production" in row[2]:
             env_id = 1
         elif "Stage" in row[2]:
@@ -120,11 +123,12 @@ def load_api(data):
                   env_id=env_id,
                   version=version)
 
-        # We need to add to the session or it won't ever be stored
-        db.session.add(api)
+        try:
+            db.session.add(api)
+            db.session.commit()
 
-    # Once we're done, we should commit our work
-    db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
 
 
 def load_call(data):

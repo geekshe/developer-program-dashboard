@@ -34,6 +34,7 @@ class API(db.Model):
     """API provided by a company."""
 
     __tablename__ = "api"
+    __table_args__ = (db.UniqueConstraint('api_name', 'env_id', 'version', name='_api_env_version'),)
 
     api_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     api_name = db.Column(db.String(64), nullable=False)
