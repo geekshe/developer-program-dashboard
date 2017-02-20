@@ -47,3 +47,8 @@ body {
 #status-message {
 	overflow: hidden;
 }
+
+.PieChart {
+	    height: 200px;
+	    margin-left: 0;
+}

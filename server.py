@@ -10,6 +10,8 @@ import sqlalchemy
 
 from decimal import Decimal
 
+import json
+
 # Import my data model
 from model import Environment, API, Call, Agg_Request, Request, connect_to_db, db
 
@@ -89,7 +91,23 @@ def calls_by_env():
     prod_agg_requests = get_agg_request('%prod%')
     prod_total = get_env_total('%prod%')
 
-    return render_template("calls.html", prod_agg_requests=prod_agg_requests, prod_total=prod_total)
+    stage_agg_requests = get_agg_request('%l1%')
+    stage_total = get_env_total('%l1%')
+
+    internal_agg_requests = get_agg_request('%d1%')
+    internal_total = get_env_total('%d1%')
+
+    return render_template("calls.html", prod_agg_requests=prod_agg_requests, prod_total=prod_total, stage_agg_requests=stage_agg_requests, stage_total=stage_total, internal_agg_requests=internal_agg_requests, internal_total=internal_total)
+
+@app.route('/prod.json')
+def env_info():
+    """Chart of API calls by environment."""
+
+    # Retrieve agg_request objects for calls in the production environment
+
+    prod_agg_requests = get_agg_request('%prod%')
+
+    return jsonify(prod_agg_requests)
 
 @app.route('/type')
 def calls_by_type():
@@ -113,6 +131,14 @@ def show_apps_customers():
     """Show relationship of apps to their customers and vice versa."""
 
     return render_template("d3.html")
+
+@app.route('/d3-force')
+def show_apps():
+    """Show relationship of apps to their customers and vice versa."""
+
+
+    return render_template("d3-force.html", jsonify(graph.json))
+
 
 ################################################################################
 
