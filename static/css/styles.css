@@ -48,6 +48,11 @@ body {
 	overflow: hidden;
 }
 
+.PieChart {
+      height: 200px;
+      margin-left: 0;
+}
+
 @-webkit-keyframes heartbeat{
     0%{-webkit-transform:scale(1)}
     50%{-webkit-transform:scale(1.4)}
@@ -68,5 +73,6 @@ body {
     50%{transform:scale(1.4)}
     100%{transform:scale(1)}
 }
+
 .heartbeat{ -webkit-animation-name:heartbeat; -moz-animation-name:heartbeat; -o-animation-name:heartbeat; animation-name:heartbeat; }
 .animate-infinite-heartbeat { -webkit-animation: heartbeat 2s infinite; /* Chrome, Safari, Opera */ animation: heartbeat 2s infinite; }

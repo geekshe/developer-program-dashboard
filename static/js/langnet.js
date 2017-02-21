@@ -388,6 +388,7 @@ function getAmountLinks(n) {
 	return linksAmount;
 }
 
+// Create links to wikipedia for each language
 function showInformation(language) {
 	var url = "http://en.wikipedia.org/wiki/"+language+"_language";
 	var n = nodesHash[language];

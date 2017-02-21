@@ -10,6 +10,8 @@ import sqlalchemy
 
 from decimal import Decimal
 
+import json
+
 # Import my data model
 from model import Environment, API, Call, Agg_Request, Request, connect_to_db, db
 
@@ -38,13 +40,58 @@ def get_env_total(sql_filter):
 
     success_totals = db.session.query(db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
 
-    env_total = 0
+    env_total = Decimal(0)
 
     for success_total in success_totals:
-        env_total += success_total.total
+        env_total += Decimal(success_total.total)
 
     return env_total
 
+def calc_call_volume(sql_filter):
+
+    sql_filter = sql_filter
+
+    env_agg_requests = get_agg_request(sql_filter)
+    env_total = get_env_total(sql_filter)
+
+    env_call_volumes = {}
+    for agg_request in env_agg_requests:
+        env_call_volumes[agg_request.call_code] = Decimal(agg_request.success_count) / env_total
+
+    return env_call_volumes
+
+
+def get_weighted_avg_latency(sql_filter):
+
+    sql_filter = sql_filter
+
+    # Get the latency for each call. Returns a list.
+    all_latency = db.session.query(Agg_Request.avg_response_time).filter(Agg_Request.call_code.like(sql_filter)).all()
+
+    # Intitialize the total_latency variable
+    total_latency = Decimal(0)
+
+    # Iterate through each item in the list and add it to the total
+    # for latency in all_latency:
+    #     total_latency += latency[0]
+
+    # Get the volume percent for each call
+    # Returns a dictionary
+    env_call_volumes = calc_call_volume(sql_filter)
+
+    # Multiply the latency by the volume percent for each call
+    # Add those together and divide by the number of calls
+    # Return the weighted latency
+
+    weighted_avg_latency = Decimal(0)
+
+    for key in env_call_volumes:
+        for latency in all_latency[0]:
+            weighted_avg_latency += (env_call_volumes[key] * latency) / Decimal(len(all_latency))
+
+    return weighted_avg_latency
+
+    # avg_latency = total_latency / len(all_latency)
 
 ############################### Flask Routes ###################################
 
@@ -54,14 +101,19 @@ def index():
 
     sql_filter = '%prod%'
 
-    all_latency = db.session.query(Agg_Request.avg_response_time).filter(Agg_Request.call_code.like(sql_filter)).all()
+    # all_latency = db.session.query(Agg_Request.avg_response_time).filter(Agg_Request.call_code.like(sql_filter)).all()
 
-    total_latency = Decimal(0)
+    # total_latency = Decimal(0)
 
-    for latency in all_latency:
-        total_latency += latency[0]
+    # for latency in all_latency:
+    #     total_latency += latency[0]
 
-    avg_latency = total_latency / len(all_latency)
+    # avg_latency = total_latency / len(all_latency)
+
+    avg_latency = get_weighted_avg_latency(sql_filter)
+
+    # Compare avg_latency to a range of values. 
+    # Based on place in range, choose green/yellow/red icon. 
 
     if avg_latency < 200:
         overall_status = 'green'
@@ -73,10 +125,7 @@ def index():
         overall_status = 'red'
         status_icon = 'fa-flash'
 
-    # Compare avg_latency to a range of values. 
-    # Based on place in range, choose green/yellow/red icon. 
     # Pass icon to template.
-
     return render_template("homepage.html", avg_latency=avg_latency, overall_status=overall_status, status_icon=status_icon)
 
 
@@ -89,7 +138,23 @@ def calls_by_env():
     prod_agg_requests = get_agg_request('%prod%')
     prod_total = get_env_total('%prod%')
 
-    return render_template("calls.html", prod_agg_requests=prod_agg_requests, prod_total=prod_total)
+    stage_agg_requests = get_agg_request('%l1%')
+    stage_total = get_env_total('%l1%')
+
+    internal_agg_requests = get_agg_request('%d1%')
+    internal_total = get_env_total('%d1%')
+
+    return render_template("calls.html", prod_agg_requests=prod_agg_requests, prod_total=prod_total, stage_agg_requests=stage_agg_requests, stage_total=stage_total, internal_agg_requests=internal_agg_requests, internal_total=internal_total)
+
+@app.route('/prod.json')
+def env_info():
+    """Chart of API calls by environment."""
+
+    # Retrieve agg_request objects for calls in the production environment
+
+    prod_agg_requests = get_agg_request('%prod%')
+
+    return jsonify(prod_agg_requests)
 
 @app.route('/type')
 def calls_by_type():
@@ -113,6 +178,14 @@ def show_apps_customers():
     """Show relationship of apps to their customers and vice versa."""
 
     return render_template("d3.html")
+
+@app.route('/d3-force')
+def show_apps():
+    """Show relationship of apps to their customers and vice versa."""
+
+
+    return render_template("d3-force.html", jsonify(graph.json))
+
 
 ################################################################################
 
