@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.node .selected {
+  stroke: black;
+}
+
+.link {
+  stroke: #999;
+}
+
+.brush .extent {
+  fill-opacity: .1;
+  stroke: #fff;
+  shape-rendering: crispEdges;
+}
+
+</style>
+<body>
+    <div align='center' id="d3_selectable_force_directed_graph"></div>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="/static/js/plot.js"></script>
+<script>selectableForceDirectedGraph();</script>

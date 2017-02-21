@@ -94,7 +94,7 @@ def load_env(data):
 def load_api(data):
     """Load values relating to the API as a whole."""
 
-    # [[TODO: Merge identical lines into the DB]]
+    # [[TODO: Don't issue api_id unless successful add]]
 
     # Read data from csv file and insert rows
     # But skip the header row: data[0]

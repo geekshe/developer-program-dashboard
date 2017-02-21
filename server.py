@@ -71,10 +71,6 @@ def get_weighted_avg_latency(sql_filter):
     # Intitialize the total_latency variable
     total_latency = Decimal(0)
 
-    # Iterate through each item in the list and add it to the total
-    # for latency in all_latency:
-    #     total_latency += latency[0]
-
     # Get the volume percent for each call
     # Returns a dictionary
     env_call_volumes = calc_call_volume(sql_filter)
@@ -100,15 +96,6 @@ def index():
     """Home page."""
 
     sql_filter = '%prod%'
-
-    # all_latency = db.session.query(Agg_Request.avg_response_time).filter(Agg_Request.call_code.like(sql_filter)).all()
-
-    # total_latency = Decimal(0)
-
-    # for latency in all_latency:
-    #     total_latency += latency[0]
-
-    # avg_latency = total_latency / len(all_latency)
 
     avg_latency = get_weighted_avg_latency(sql_filter)
 
@@ -173,18 +160,30 @@ def calls_by_type():
 
     return render_template("calls.html", agg_requests=agg_requests, env_total=env_total)
 
+
 @app.route('/d3')
 def show_apps_customers():
     """Show relationship of apps to their customers and vice versa."""
 
     return render_template("d3.html")
 
-@app.route('/d3-force')
-def show_apps():
+
+@app.route('/d3-force-curve')
+def show_apps_curve():
     """Show relationship of apps to their customers and vice versa."""
 
+    return render_template("d3-force-curve.html")
 
-    return render_template("d3-force.html", jsonify(graph.json))
+
+@app.route('/miserables.json')
+def render_d3_relationships():
+    """Show relationship of apps to their customers and vice versa."""
+
+    json_string = open('miserables.json').read()
+
+    # data_dict = json.loads(json_string)
+
+    return json_string
 
 
 ################################################################################
