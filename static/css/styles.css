@@ -47,3 +47,26 @@ body {
 #status-message {
 	overflow: hidden;
 }
+
+@-webkit-keyframes heartbeat{
+    0%{-webkit-transform:scale(1)}
+    50%{-webkit-transform:scale(1.4)}
+    100%{-webkit-transform:scale(1)}
+}
+@-moz-keyframes heartbeat{
+    0%{-moz-transform:scale(1)}
+    50%{-moz-transform:scale(1.4)}
+    100%{-moz-transform:scale(1)}
+}
+@-o-keyframes heartbeat{
+    0%{-o-transform:scale(1)}
+    50%{-o-transform:scale(1.4)}
+    100%{-o-transform:scale(1)}
+}
+@keyframes heartbeat{
+    0%{transform:scale(1)}
+    50%{transform:scale(1.4)}
+    100%{transform:scale(1)}
+}
+.heartbeat{ -webkit-animation-name:heartbeat; -moz-animation-name:heartbeat; -o-animation-name:heartbeat; animation-name:heartbeat; }
+.animate-infinite-heartbeat { -webkit-animation: heartbeat 2s infinite; /* Chrome, Safari, Opera */ animation: heartbeat 2s infinite; }
