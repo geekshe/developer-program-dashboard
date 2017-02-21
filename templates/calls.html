@@ -29,81 +29,126 @@
 
   <!-- Identify where the chart should be drawn. -->
   <h2>Email API (Production)</h2>
-    <div id="ProdPieChart" style="width:400, height:300" class="PieChart"></div> 
 
-      <script type="text/javascript">
-        google.charts.load('current', {packages: ['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+<div class="row">
+    <div class="col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">API Calls by Volume (Production)</h3>
+            </div>
+            <div class="panel-body">
+              <div id="ProdPieChart" style="width:400, height:300" class="PieChart"></div> 
+
+                <script type="text/javascript">
+                  google.charts.load('current', {packages: ['corechart']});
+                  google.charts.setOnLoadCallback(drawChart);
 
 
-        function drawChart() {
-          // Define the chart to be drawn.
-          var data = new google.visualization.DataTable();
-          data.addColumn('string', 'Call');
-          data.addColumn('number', 'Percent Volume');
-          data.addRows([
-            {% for agg_request in prod_agg_requests %}
-              ['{{agg_request.call_code}}', {{agg_request.success_count / prod_total}}],
-            {% endfor %}
-          ]);
+                  function drawChart() {
+                    // Define the chart to be drawn.
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'Call');
+                    data.addColumn('number', 'Percent Volume');
+                    data.addRows([
+                      {% for agg_request in prod_agg_requests %}
+                        ['{{agg_request.call_code}}', {{agg_request.success_count / prod_total}}],
+                      {% endfor %}
+                    ]);
 
-          // Instantiate and draw the chart.
-          var chart = new google.visualization.PieChart(document.getElementById('ProdPieChart'));
-          chart.draw(data, null);
-        }
-      </script>
+                    // Instantiate and draw the chart.
+                    var chart = new google.visualization.PieChart(document.getElementById('ProdPieChart'));
+                    chart.draw(data, null);
+                  }
+                </script>
+
+                <div class="text-right">
+                    <a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
   <!-- Identify where the chart should be drawn. -->
   <h2>Email API (Staging)</h2>
-    <div id="StagePieChart" style="width:400, height:300" class="PieChart"></div> 
+    <div class="row">
+      <div class="col-lg-4">
+          <div class="panel panel-primary">
+              <div class="panel-heading">
+                  <h3 class="panel-title">API Calls by Volume (Staging)</h3>
+              </div>
+              <div class="panel-body">
 
-      <script type="text/javascript">
-        google.charts.load('current', {packages: ['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+                  <div id="StagePieChart" style="width:400, height:300" class="PieChart"></div> 
+
+                    <script type="text/javascript">
+                      google.charts.load('current', {packages: ['corechart']});
+                      google.charts.setOnLoadCallback(drawChart);
 
 
-        function drawChart() {
-          // Define the chart to be drawn.
-          var data = new google.visualization.DataTable();
-          data.addColumn('string', 'Call');
-          data.addColumn('number', 'Percent Volume');
-          data.addRows([
-            {% for agg_request in stage_agg_requests %}
-              ['{{agg_request.call_code}}', {{agg_request.success_count / stage_total}}],
-            {% endfor %}
-          ]);
+                      function drawChart() {
+                        // Define the chart to be drawn.
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'Call');
+                        data.addColumn('number', 'Percent Volume');
+                        data.addRows([
+                          {% for agg_request in stage_agg_requests %}
+                            ['{{agg_request.call_code}}', {{agg_request.success_count / stage_total}}],
+                          {% endfor %}
+                        ]);
 
-          // Instantiate and draw the chart.
-          var chart = new google.visualization.PieChart(document.getElementById('StagePieChart'));
-          chart.draw(data, null);
-        }
-      </script>
+                        // Instantiate and draw the chart.
+                        var chart = new google.visualization.PieChart(document.getElementById('StagePieChart'));
+                        chart.draw(data, null);
+                      }
+                    </script>
+                  <div class="text-right">
+                    <a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
   <!-- Identify where the chart should be drawn. -->
   <h2>Email API (Internal)</h2>
-    <div id="InternalPieChart" style="width:400, height:300" class="PieChart"></div> 
+    <div class="row">
+      <div class="col-lg-4">
+          <div class="panel panel-primary">
+              <div class="panel-heading">
+                  <h3 class="panel-title">API Calls by Volume (Internal)</h3>
+              </div>
+              <div class="panel-body">
+                <div id="InternalPieChart" style="width:400, height:300" class="PieChart"></div> 
 
-      <script type="text/javascript">
-        google.charts.load('current', {packages: ['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+                  <script type="text/javascript">
+                    google.charts.load('current', {packages: ['corechart']});
+                    google.charts.setOnLoadCallback(drawChart);
 
 
-        function drawChart() {
-          // Define the chart to be drawn.
-          var data = new google.visualization.DataTable();
-          data.addColumn('string', 'Call');
-          data.addColumn('number', 'Percent Volume');
-          data.addRows([
-            {% for agg_request in internal_agg_requests %}
-              ['{{agg_request.call_code}}', {{agg_request.success_count / internal_total}}],
-            {% endfor %}
-          ]);
+                    function drawChart() {
+                      // Define the chart to be drawn.
+                      var data = new google.visualization.DataTable();
+                      data.addColumn('string', 'Call');
+                      data.addColumn('number', 'Percent Volume');
+                      data.addRows([
+                        {% for agg_request in internal_agg_requests %}
+                          ['{{agg_request.call_code}}', {{agg_request.success_count / internal_total}}],
+                        {% endfor %}
+                      ]);
 
-          // Instantiate and draw the chart.
-          var chart = new google.visualization.PieChart(document.getElementById('InternalPieChart'));
-          chart.draw(data, null);
-        }
-      </script>
+                      // Instantiate and draw the chart.
+                      var chart = new google.visualization.PieChart(document.getElementById('InternalPieChart'));
+                      chart.draw(data, null);
+                    }
+                  </script>
+                <div class="text-right">
+                    <a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- Morris Charts JavaScript -->
     <script src="/static/js/plugins/morris/raphael.min.js"></script>
