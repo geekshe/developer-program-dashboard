@@ -1,34 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-      <link rel="pingback" href="http://www.cotrino.com/xmlrpc.php" /> 
-      <link rel="alternate" type="application/rss+xml" title="Cotrino &raquo; Feed" href="http://www.cotrino.com/feed/" />
     <title>Language Network</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery.js" type="text/javascript"></script>
     <script src="http://code.jquery.com/ui/1.8.23/jquery-ui.min.js" type="text/javascript"></script>
     <script src="http://jquery-ui.googlecode.com/svn/tags/latest/external/jquery.bgiframe-2.1.2.js" type="text/javascript"></script>
     <script src="http://jquery-ui.googlecode.com/svn/tags/latest/ui/minified/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script>
     <script src="http://mbostock.github.com/d3/d3.v2.js?2.9.5"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.23/themes/base/jquery-ui.css" type="text/css" media="all" />
     <link href="/static/css/langnet.css" rel="stylesheet" type="text/css" />
-  </head>
-  <body>
+
   <div id="graphHolder"></div>
   <div id="toolbox">
     <p id="titlep">
-      <div id="title">LanguageNetwork, 2012</div><br/>
-      <a class="boton" href="http://www.cotrino.com/" target="_blank">&copy; Cotrino.com</a>
-      <a class="boton" href="#" onClick="about();return false;">How it works</a>
+      <div id="title">Apps Used by Customers</div><br/>
     </p>
     <div id="chartSelector">
       <input type="radio" value="network" id="networkOption" name="chartOption" checked="checked" /><label for="networkOption">network</label>
       <input type="radio" value="chord" id="chordOption" name="chartOption" /><label for="chordOption">chord</label>
     </div>
-    <p><input id="hide_checkbox" type="checkbox" onClick="hide()" />Hide unrelated languages</p>
+    <p><input id="hide_checkbox" type="checkbox" onClick="hide()" />Hide unrelated apps</p>
     <div id="sliderContainer">
       Filter by similarity level: <span id="similarity"></span>
       <div id="slider"></div>
@@ -37,42 +28,6 @@
     <div id="language_information"></div>
   </div>
   <div id="about" title="How it works">
-    <p>The "Language Network" is an approach to show language similarity based on the
-    <a href="http://en.wikipedia.org/wiki/Levenshtein_distance" target="_blank"/>
-    Levenshtein distance</a>, a string metric for measuring the difference between two words.</p>
-    <p>In this case, we compare the full dictionary set of a language <i>A</i>
-    against a language <i>B</i> for those words sharing the same meaning. For example:</p>
-    <table id="leveninfo">
-      <tr><th>Word in language A</th><th>Word in language B</th><th>Distance</th><th>Similarity</th></tr>
-      <tr><td>house (en)</td><td>Haus (de)</td><td>2</td><td>0.33</td></tr>
-      <tr><td>kocsi (hu)</td><td>coche (es)</td><td>3</td><td>0.25</td></tr>
-      <tr><td>ecouter (fr)</td><td>listen (en)</td><td>5</td><td>0.17</td></tr>
-      <tr><td>zahllos (de)</td><td>innumerabilis (la)</td><td>10</td><td>0.09</td></tr>
-      <tr><td>sparga (hu)</td><td>Spargel (de)</td><td>2</td><td>0.33</td></tr>
-      <tr><td>ermozura (lad)</td><td>hermosura (es)</td><td>2</td><td>0.33</td></tr>
-      <tr><td>observar (es)</td><td>observar (ca)</td><td>0</td><td>1.00</td></tr>
-      <tr><td>brusc (dlm)</td><td>brusco (it)</td><td>1</td><td>0.50</td></tr>
-    </table>
-    <p>The accumulated similarity for all compared words is what we then 
-    call "language similarity". Languages which do not use Latin script have been
-    romanized through transliteration.</p>
-    <p>This has been possible thanks to:</p>
-    <ul>
-      <li><a href="http://www.wiktionary.org/" target="_blank">Wiktionary</a></li>
-      <li><a href="http://www.java.com/" target="_blank">Java</a></li>
-      <li><a href="http://sourceforge.net/projects/simmetrics/" target="_blank">SimMetrics</a></li>
-      <li><a href="http://www.sqlite.org/" target="_blank">SQLite</a></li>
-      <li><a href="http://www.perl.org/" target="_blank">Perl</a></li>
-      <li><a href="https://developer.mozilla.org/en-US/docs/JavaScript" target="_blank">JavaScript</a></li>
-      <li><a href="http://www.w3.org/Style/CSS/" target="_blank">CSS</a></li>
-      <li><a href="http://d3js.org/" target="_blank">D3.js</a></li>
-      <li><a href="http://jquery.com/" target="_blank">jQuery</a></li>
-      <li><a href="http://www.ubuntu.com/" target="_blank">Ubuntu Linux</a></li>
-      <li><a href="http://www.eclipse.org/" target="_blank">Eclipse</a></li>
-      <li><a href="http://www.mozilla.org/en-US/firefox/fx/" target="_blank">Mozilla Firefox</a></li>
-      <li><a href="http://www.google.com/chrome/" target="_blank">Google Chrome</a></li>
-    </ul>
-    <a class="boton" href="http://www.cotrino.com/" target="_blank">&copy; Cotrino.com</a>
   </div>
 
   <script type="text/javascript" src="/static/js/langnet.js"></script>
@@ -94,5 +49,4 @@
       $("#slider").slider({ change: filterChange, min: similarityThresholdMin, max: similarityThresholdMax, value: similarityThreshold });
     });
   </script>
-  </body>
-</html>
+{% endblock %}

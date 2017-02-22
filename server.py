@@ -131,17 +131,17 @@ def calls_by_env():
     internal_agg_requests = get_agg_request('%d1%')
     internal_total = get_env_total('%d1%')
 
-    return render_template("calls.html", prod_agg_requests=prod_agg_requests, prod_total=prod_total, stage_agg_requests=stage_agg_requests, stage_total=stage_total, internal_agg_requests=internal_agg_requests, internal_total=internal_total)
+    return render_template("env.html", prod_agg_requests=prod_agg_requests, prod_total=prod_total, stage_agg_requests=stage_agg_requests, stage_total=stage_total, internal_agg_requests=internal_agg_requests, internal_total=internal_total)
 
-@app.route('/prod.json')
-def env_info():
-    """Chart of API calls by environment."""
+# @app.route('/prod.json')
+# def env_info():
+#     """Chart of API calls by environment."""
 
-    # Retrieve agg_request objects for calls in the production environment
+#     # Retrieve agg_request objects for calls in the production environment
 
-    prod_agg_requests = get_agg_request('%prod%')
+#     prod_agg_requests = get_agg_request('%prod%')
 
-    return jsonify(prod_agg_requests)
+#     return jsonify(prod_agg_requests)
 
 @app.route('/type')
 def calls_by_type():
@@ -158,7 +158,7 @@ def calls_by_type():
     for success_total in success_totals:
         env_total += success_total.total
 
-    return render_template("calls.html", agg_requests=agg_requests, env_total=env_total)
+    return render_template("env.html", agg_requests=agg_requests, env_total=env_total)
 
 
 @app.route('/d3')
@@ -180,8 +180,6 @@ def render_d3_relationships():
     """Show relationship of apps to their customers and vice versa."""
 
     json_string = open('miserables.json').read()
-
-    # data_dict = json.loads(json_string)
 
     return json_string
 
