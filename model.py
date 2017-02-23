@@ -66,7 +66,7 @@ class Call(db.Model):
 
     __tablename__ = "call"
 
-    call_code = db.Column(db.String(128), primary_key=True)
+    call_id = db.Column(db.Integer, primary_key=True)
     call_name = db.Column(db.String(128))
     api_id = db.Column(db.Integer,
                        db.ForeignKey("api.api_id"),
@@ -161,7 +161,6 @@ class Customer(db.Model):
     sub_start = db.Column(db.DateTime, nullable=True)
     sub_end = db.Column(db.DateTime, nullable=True)
 
-
     def __repr__(self):
         """Provide helpful representation when printed."""
 
@@ -206,7 +205,7 @@ class Application(db.Model):
     app_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     app_name = db.Column(db.String(128), nullable=False)
     app_type = db.Column(db.String(128), nullable=False)
-    dev_id = db.Column(db.String(128),
+    dev_id = db.Column(db.Integer,
                         db.ForeignKey("developer.dev_id"),
                         nullable=False)
     application_id = db.Column(db.String(128), nullable=False)
@@ -230,10 +229,10 @@ class App_Used(db.Model):
     __tablename__ = "app_used"
 
     use_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    app_id = db.Column(db.String(128),
+    app_id = db.Column(db.Integer,
                         db.ForeignKey("application.app_id"),
                         nullable=False)
-    customer_id = db.Column(db.String(128),
+    customer_id = db.Column(db.Integer,
                         db.ForeignKey("customer.customer_id"),
                         nullable=False)
     use_start = db.Column(db.DateTime, nullable=False)
