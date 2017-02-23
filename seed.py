@@ -11,7 +11,17 @@ from server import app
 
 import csv
 
-def read_data_file():
+import json
+
+def read_json_file():
+    """Read JSON file for use in creating tables."""
+
+    json_string = open('full_schema.json').read()
+
+    return json.loads(json_string)
+
+
+def read_csv_file():
     """Read data from CSV and return it for addition to various tables"""
 
     # Uncomment to open test file
@@ -19,6 +29,9 @@ def read_data_file():
 
     # Uncomment to open full file
     # f = open('mashery.csv')
+
+    # Uncomment to open full schema file
+    # f = open('full_schema.csv')
 
     csv_f = csv.reader(f)
 
@@ -59,6 +72,14 @@ def create_call_code(row):
     call_code = "{} ({})".format(call_code_prefix, call_code_suffix)
     return call_code
 
+def load_customer(data):
+    """Create customer table"""
+
+    for row in data[1:]:
+        customer = row['customer']
+        username = customer['username']
+
+
 def load_env(data):
     """Load API values. In this case, they don't come from the CSV file, but
        are the same for each row in that file."""
@@ -84,15 +105,15 @@ def load_env(data):
         env_name = 'Internal',
         env_base_url = 'https://api.constantcontact.com/D1')
 
-        try:
+    try:
         # We need to add to the session or it won't ever be stored
         db.session.add_all([row1, row2, row3, row4])
 
         # Once we're done, we should commit our work
         db.session.commit()
 
-        except IntegrityError:
-            db.session.rollback()
+    except IntegrityError:
+        db.session.rollback()
 
 
 def load_api(data):
@@ -120,12 +141,12 @@ def load_api(data):
         env_id = 4,
         version = '2.3')
 
-        try:
-            db.session.add_all([row1, row2, row3, row4])
-            db.session.commit()
+    try:
+        db.session.add_all([row1, row2, row3, row4])
+        db.session.commit()
 
-        except IntegrityError:
-            db.session.rollback()
+    except IntegrityError:
+        db.session.rollback()
 
 
 def load_call(data):
@@ -212,7 +233,8 @@ if __name__ == "__main__":
     db.create_all()
 
     # Import different types of data
-    data = read_data_file()
+    # data = read_csv_file()
+    data = read_json_file()
     # create_call_code(data)
     load_env(data)
     load_api(data)
