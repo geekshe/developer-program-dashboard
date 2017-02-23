@@ -142,6 +142,118 @@ class Request(db.Model):
                            backref=db.backref("request",
                            order_by=call_code))
 
+class Customer(db.Model):
+    """Customer properties."""
+
+    __tablename__ = "customer"
+
+    customer_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    username = db.Column(db.String(128), nullable=False)
+    first_name = db.Column(db.String(128), nullable=False)
+    last_name = db.Column(db.String(128), nullable=False)
+    email = db.Column(db.String(128), nullable=False)
+    city = db.Column(db.String(128), nullable=False)
+    state = db.Column(db.String(128), nullable=True)
+    country = db.Column(db.String(128), nullable=False)
+    sub_status = db.Column(db.String(128), nullable=False)
+    sub_level = db.Column(db.String(128), nullable=True)
+    revenue = db.Column(db.Numeric, nullable=True)
+    sub_start = db.Column(db.DateTime, nullable=True)
+    sub_end = db.Column(db.DateTime, nullable=True)
+
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Customer customer_id={} username={} sub_status={} sub_level={} sub_start={} sub_end={}>".format(
+                                                                       self.customer_id,
+                                                                       self.username,
+                                                                       self.sub_status,
+                                                                       self.sub_level,
+                                                                       self.sub_start,
+                                                                       self.sub_end)
+
+class Developer(db.Model):
+    """Developer properties."""
+
+    __tablename__ = "developer"
+
+    dev_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    username = db.Column(db.String(128), nullable=False)
+    first_name = db.Column(db.String(128), nullable=False)
+    last_name = db.Column(db.String(128), nullable=False)
+    email = db.Column(db.String(128), nullable=False)
+    company = db.Column(db.String(128), nullable=False)
+    city = db.Column(db.String(128), nullable=False)
+    state = db.Column(db.String(128), nullable=True)
+    country = db.Column(db.String(128), nullable=False)
+    dev_type = db.Column(db.String(128), nullable=False)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Developer dev_id={} username={} company={} dev_type={}>".format(
+                                                                       self.dev_id,
+                                                                       self.username,
+                                                                       self.company,
+                                                                       self.dev_type)
+
+class Application(db.Model):
+    """Application properties."""
+
+    __tablename__ = "application"
+
+    app_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    app_name = db.Column(db.String(128), nullable=False)
+    app_type = db.Column(db.String(128), nullable=False)
+    dev_id = db.Column(db.String(128),
+                        db.ForeignKey("developer.dev_id"),
+                        nullable=False)
+    application_id = db.Column(db.String(128), nullable=False)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Application app_id={} app_name={} app_type={}>".format(
+                                                                       self.app_id,
+                                                                       self.app_name,
+                                                                       self.app_type)
+
+    developer = db.relationship("Developer",
+                           backref=db.backref("application",
+                           order_by=dev_id))
+
+
+class App_Used(db.Model):
+    """Application/customer relationships."""
+
+    __tablename__ = "app_used"
+
+    use_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    app_id = db.Column(db.String(128),
+                        db.ForeignKey("application.app_id"),
+                        nullable=False)
+    customer_id = db.Column(db.String(128),
+                        db.ForeignKey("customer.customer_id"),
+                        nullable=False)
+    use_start = db.Column(db.DateTime, nullable=False)
+    use_end = db.Column(db.DateTime, nullable=True)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<App_Used use_id={} app_id={} customer_id={}>".format(
+                                                                       self.use_id,
+                                                                       self.app_id,
+                                                                       self.customer_id)
+
+    application = db.relationship("Application",
+                           backref=db.backref("app_used",
+                           order_by=app_id))
+
+    customer = db.relationship("Customer",
+                           backref=db.backref("app_used",
+                           order_by=customer_id))
 
 ##############################################################################
 # Helper functions

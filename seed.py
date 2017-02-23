@@ -84,11 +84,15 @@ def load_env(data):
         env_name = 'Internal',
         env_base_url = 'https://api.constantcontact.com/D1')
 
+        try:
         # We need to add to the session or it won't ever be stored
-    db.session.add_all([row1, row2, row3, row4])
+        db.session.add_all([row1, row2, row3, row4])
 
         # Once we're done, we should commit our work
-    db.session.commit()
+        db.session.commit()
+
+        except IntegrityError:
+            db.session.rollback()
 
 
 def load_api(data):
@@ -96,35 +100,28 @@ def load_api(data):
 
     # [[TODO: Don't issue api_id unless successful add]]
 
-    # Read data from csv file and insert rows
-    # But skip the header row: data[0]
-    for row in data[1:]:
+    row1 = API(
+        api_name = 'Ecommerce API',
+        env_id = 1,
+        version = '2.2')
 
-        api_name = 'Ecommerce API'
+    row2 = API(
+        api_name = 'Ecommerce API',
+        env_id = 2,
+        version = '2.2')
 
-        # Set the env_id based on env type
-        if "Production" in row[2]:
-            env_id = 1
-        elif "Stage" in row[2]:
-            env_id = 2
-        elif "L1" in row[2]:
-            env_id = 3
-        elif "D1" in row[2]:
-            env_id = 4
-        else:
-            env_id = 1
+    row3 = API(
+        api_name = 'Ecommerce API',
+        env_id = 3,
+        version = '2.2')
 
-        if 'v2' in row[0]:
-            version = 'v2'
-        else:
-            version = 'v1'
-
-        api = API(api_name=api_name,
-                  env_id=env_id,
-                  version=version)
+    row4 = API(
+        api_name = 'Ecommerce API',
+        env_id = 4,
+        version = '2.3')
 
         try:
-            db.session.add(api)
+            db.session.add_all([row1, row2, row3, row4])
             db.session.commit()
 
         except IntegrityError:
