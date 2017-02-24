@@ -68,79 +68,26 @@ class Call(db.Model):
 
     call_id = db.Column(db.Integer, primary_key=True)
     call_name = db.Column(db.String(128))
+    env_id = db.Column(db.Integer,
+                       db.ForeignKey("environment.env_id"),
+                       nullable=False)
     api_id = db.Column(db.Integer,
                        db.ForeignKey("api.api_id"),
                        nullable=False)
+    key_type = db.Column(db.String(128))
     endpoint = db.Column(db.String(128))
     method = db.Column(db.String(10))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Call call_code={} call_name={} api_id={} endpoint={}, method={}>".format(
-                                                                       self.call_code,
+        return "<Call call_id={} call_name={} api_id={} endpoint={}, method={}>".format(
+                                                                       self.call_id,
                                                                        self.call_name,
                                                                        self.api_id,
                                                                        self.endpoint,
                                                                        self.method)
 
-
-class Agg_Request(db.Model):
-    """The the aggregated stats for each call."""
-
-    __tablename__ = "agg_request"
-
-    aggr_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    call_code = db.Column(db.String(128),
-                        db.ForeignKey("call.call_code"),
-                        nullable=False)
-    success_count = db.Column(db.Integer, nullable=False)
-    block_count = db.Column(db.Integer, nullable=False)
-    other_count = db.Column(db.Integer, nullable=False)
-    total_responses = db.Column(db.Integer, nullable=False)
-    avg_response_time = db.Column(db.Numeric, nullable=False)
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return "<Agg_Request aggr_id={} call_code={} success_count={} block_count={} other_count={} total_responses={} avg_response_time={}>".format(
-                                                                       self.aggr_id,
-                                                                       self.call_code,
-                                                                       self.success_count,
-                                                                       self.block_count,
-                                                                       self.other_count,
-                                                                       self.total_responses,
-                                                                       self.avg_response_time)
-
-    call = db.relationship("Call",
-                           backref=db.backref("agg_request",
-                           order_by=call_code))
-
-
-class Request(db.Model):
-    """The container for an individual API request to the server."""
-
-    __tablename__ = "request"
-
-    request_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    call_code = db.Column(db.String(128),
-                        db.ForeignKey("call.call_code"),
-                        nullable=False)
-    response_code = db.Column(db.String(128), nullable=False)
-    response_time = db.Column(db.Numeric, nullable=False)
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return "<Request request_id={} call_code={} response_code={} response_time={}>".format(
-                                                                       self.request_id,
-                                                                       self.call_code,
-                                                                       self.response_code,
-                                                                       self.response_time)
-
-    call = db.relationship("Call",
-                           backref=db.backref("request",
-                           order_by=call_code))
 
 class Customer(db.Model):
     """Customer properties."""
@@ -172,6 +119,7 @@ class Customer(db.Model):
                                                                        self.sub_start,
                                                                        self.sub_end)
 
+
 class Developer(db.Model):
     """Developer properties."""
 
@@ -197,6 +145,7 @@ class Developer(db.Model):
                                                                        self.company,
                                                                        self.dev_type)
 
+
 class Application(db.Model):
     """Application properties."""
 
@@ -221,6 +170,41 @@ class Application(db.Model):
     developer = db.relationship("Developer",
                            backref=db.backref("application",
                            order_by=dev_id))
+
+
+class Request(db.Model):
+    """The container for an individual API request to the server."""
+
+    __tablename__ = "request"
+
+    request_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    call_id = db.Column(db.Integer,
+                        db.ForeignKey("call.call_id"),
+                        nullable=False)
+    app_id = db.Column(db.Integer,
+                        db.ForeignKey("application.app_id"),
+                        nullable=False)
+    response_code = db.Column(db.String(128), nullable=False)
+    response_time = db.Column(db.Numeric, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Request request_id={} call_id={} response_code={} response_time={} date={}>".format(
+                                                                       self.request_id,
+                                                                       self.call_id,
+                                                                       self.response_code,
+                                                                       self.response_time,
+                                                                       self.date)
+
+    call = db.relationship("Call",
+                           backref=db.backref("request",
+                           order_by=call_id))
+
+    application = db.relationship("Application",
+                           backref=db.backref("request",
+                           order_by=app_id))
 
 
 class App_Used(db.Model):

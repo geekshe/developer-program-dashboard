@@ -2,7 +2,7 @@
 
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
-from model import Environment, API, Call, Agg_Request, Request, Customer, Developer, Application, App_Used
+from model import Environment, API, Call, Request, Customer, Developer, Application, App_Used
 
 from datetime import datetime
 
@@ -39,42 +39,6 @@ def read_csv_file():
     csv_f = csv.reader(f)
 
     return list(csv_f)
-
-
-def create_call_code(row):
-
-    if "list" in row[0]:
-        call_code_prefix = 'lists'
-    elif "emailmarketing" in row[0]:
-        call_code_prefix = 'email'
-    elif "contact" in row[0]:
-        call_code_prefix = 'contacts'
-    elif "eventspot" in row[0]:
-        call_code_prefix = 'events'
-    elif "info" in row[0]:
-        call_code_prefix = 'account'
-    elif "verified" in row[0]:
-        call_code_prefix = 'verif'
-    elif "library" in row[0]:
-        call_code_prefix = 'libr'
-    elif "partner" in row[0]:
-        call_code_prefix = 'part'
-    else:
-        call_code_prefix = row[0]
-
-    if "Production" in row[2]:
-        call_code_suffix = 'prod'
-    elif "Stage" in row[2]:
-        call_code_suffix = 'stage'
-    elif "L1" in row[2]:
-        call_code_suffix = 'l1'
-    elif "D1" in row[2]:
-        call_code_suffix = 'd1'
-    else:
-        call_code_suffix = row[2]
-
-    call_code = "{} ({})".format(call_code_prefix, call_code_suffix)
-    return call_code
 
 
 def load_customer(data):
@@ -211,29 +175,29 @@ def load_app_used(data):
 
 
 def load_env(data):
-    """Load API values. In this case, they don't come from the CSV file, but
+    """Load API values. In this case, they don't come from the JSON file, but
        are the same for each row in that file."""
 
     # Hard-code data as it never changes
     row1 = Environment(
         env_id=1,
         env_name='Production',
-        env_base_url='https://api.constantcontact.com/v2')
+        env_base_url='https://api.ecommerce.com/')
 
     row2 = Environment(
         env_id=2,
         env_name='Staging',
-        env_base_url='https://api.constantcontact.com/staging')
+        env_base_url='https://api.ecommerce.com/staging')
 
     row3 = Environment(
         env_id=3,
         env_name='Partner',
-        env_base_url='https://api.constantcontact.com/L1')
+        env_base_url='https://api.ecommerce.com/partner')
 
     row4 = Environment(
         env_id=4,
         env_name='Internal',
-        env_base_url='https://api.constantcontact.com/D1')
+        env_base_url='https://api.ecommerce.com/internal')
 
     try:
         # We need to add to the session or it won't ever be stored
@@ -248,8 +212,6 @@ def load_env(data):
 
 def load_api(data):
     """Load values relating to the API as a whole."""
-
-    # [[TODO: Don't issue api_id unless successful add]]
 
     row1 = API(
         api_name='Ecommerce API',
@@ -289,19 +251,17 @@ def load_call(data):
 
         call_name = call['call_name']
         env_id = call['env_id']
+        api_id = call['api_id']
         key_type = call['key_type']
-        latency = call['latency']
-        success = call['success']
-        fail = call['fail']
-        date = call['date']
+        endpoint = call['endpoint']
+        method = call['method']
 
         call = Call(call_name=call_name,
                     env_id=env_id,
+                    api_id=api_id,
                     key_type=key_type,
-                    latency=latency,
-                    success=success,
-                    fail=fail,
-                    date=date)
+                    endpoint=endpoint,
+                    method=method)
 
         # We need to add to the session or it won't ever be stored
         db.session.add(call)
@@ -310,27 +270,26 @@ def load_call(data):
     db.session.commit()
 
 
-def load_agg_request(data):
-    """Load aggregate values for different calls and environments"""
+def load_request(data):
+    """Load values for an individual request"""
 
-    # Read data from csv file and insert rows
     for row in data[1:]:
-        call_code = call_code = create_call_code(row)
-        success_count = row[5]
-        block_count = row[6]
-        other_count = row[7]
-        total_responses = row[8]
-        avg_response_time = row[4]
+        request = row['request']
 
-        agg_request = Agg_Request(call_code=call_code,
-                  success_count=success_count,
-                  block_count=block_count,
-                  other_count=other_count,
-                  total_responses=total_responses,
-                  avg_response_time=avg_response_time)
+        call_id = request['call_id']
+        app_id = request['app_id']
+        response_code = request['response_code']
+        response_time = request['response_time']
+        date = request['date']
+
+        request = Request(call_id=call_id,
+                    app_id=app_id,
+                    response_code=response_code,
+                    response_time=response_time,
+                    date=date)
 
         # We need to add to the session or it won't ever be stored
-        db.session.add(agg_request)
+        db.session.add(request)
 
     # Once we're done, we should commit our work
     db.session.commit()
@@ -345,7 +304,7 @@ if __name__ == "__main__":
     # Import different types of data
     # data = read_csv_file()
     data = read_json_file()
-    # create_call_code(data)
+    # create_call_id(data)
     load_customer(data)
     load_developer(data)
     load_application(data)
@@ -353,5 +312,4 @@ if __name__ == "__main__":
     load_env(data)
     load_api(data)
     load_call(data)
-    # load_agg_request(data)
-    # load_requests()
+    load_request(data)

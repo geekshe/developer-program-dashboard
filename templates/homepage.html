@@ -12,11 +12,11 @@
                 <div class="row">
                     <div class="col-xs-3">
                         <!-- Status icon -->
-                        <i class="fa {{status_icon}} fa-5x"></i>
+                        <i class="fa {{overall_status_icon}} fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">{{'%0.0f' % avg_latency|float}} ms</div>
-                        <div>(Weighted) Average Latency</div>
+                        <div class="huge">{{ overall_rating }}/10</div>
+                        <div>Overall Status</div>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,57 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-{{ performance_status }}">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <!-- Status icon -->
+                        <i class="fa {{performance_status_icon}} fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{ performance_rating }}/10</div>
+                        <div>Performance Status</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-{{ outreach_status }}">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <!-- Status icon -->
+                        <i class="fa {{outreach_status_icon}} fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{ outreach_rating }}/10</div>
+                        <div>Outreach Status</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
 
 <p>Check out these pages:</p>
 <ul>

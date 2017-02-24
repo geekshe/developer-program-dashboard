@@ -13,7 +13,9 @@ from decimal import Decimal
 import json
 
 # Import my data model
-from model import Environment, API, Call, Agg_Request, Request, connect_to_db, db
+from model import Environment, API, Call, Request, connect_to_db, db
+
+from server_functions import get_request, get_env_total, calc_call_volume, get_weighted_avg_latency
 
 ################################# Web App ######################################
 
@@ -22,72 +24,8 @@ app = Flask(__name__)
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "lkkljasdienynfslkci"
 
-# Normally, if you use an undefined variable in Jinja2, it fails
-# silently. This is horrible. Fix this so that, instead, it raises an
-# error.
+# Raise an error if you use an undefined Jinja2 variable.
 app.jinja_env.undefined = StrictUndefined
-
-############################## Helper Functions ################################
-
-def get_agg_request(sql_filter):
-
-    # Retrieves agg_request objects for a specified environment
-    agg_requests = db.session.query(Agg_Request).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
-
-    return agg_requests
-
-def get_env_total(sql_filter):
-
-    success_totals = db.session.query(db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
-
-    env_total = Decimal(0)
-
-    for success_total in success_totals:
-        env_total += Decimal(success_total.total)
-
-    return env_total
-
-def calc_call_volume(sql_filter):
-
-    sql_filter = sql_filter
-
-    env_agg_requests = get_agg_request(sql_filter)
-    env_total = get_env_total(sql_filter)
-
-    env_call_volumes = {}
-    for agg_request in env_agg_requests:
-        env_call_volumes[agg_request.call_code] = Decimal(agg_request.success_count) / env_total
-
-    return env_call_volumes
-
-
-def get_weighted_avg_latency(sql_filter):
-
-    sql_filter = sql_filter
-
-    # Get the latency for each call. Returns a list.
-    all_latency = db.session.query(Agg_Request.avg_response_time).filter(Agg_Request.call_code.like(sql_filter)).all()
-
-    # Intitialize the total_latency variable
-    total_latency = Decimal(0)
-
-    # Get the volume percent for each call
-    # Returns a dictionary
-    env_call_volumes = calc_call_volume(sql_filter)
-
-    # Multiply the latency by the volume percent for each call
-    # Add those together and divide by the number of calls
-    # Return the weighted latency
-
-    weighted_avg_latency = Decimal(0)
-
-    for key in env_call_volumes:
-        for latency in all_latency[0]:
-            weighted_avg_latency += (env_call_volumes[key] * latency) / Decimal(len(all_latency))
-
-    return weighted_avg_latency
-
-    # avg_latency = total_latency / len(all_latency)
 
 ############################### Flask Routes ###################################
 
@@ -104,44 +42,44 @@ def index():
 
     if avg_latency < 200:
         overall_status = 'green'
-        status_icon = 'fa-check-square'
+        overall_status_icon = 'fa-check-square'
     elif 200 <= avg_latency < 800:
         overall_status = 'yellow'
-        status_icon = 'fa-exclamation'
+        overall_status_icon = 'fa-exclamation'
     elif avg_latency >= 800:
         overall_status = 'red'
-        status_icon = 'fa-flash'
+        overall_status_icon = 'fa-flash'
 
     # Pass icon to template.
-    return render_template("homepage.html", avg_latency=avg_latency, overall_status=overall_status, status_icon=status_icon)
+    return render_template("homepage.html", overall_rating=overall_rating, overall_status=overall_status, overall_status_icon=overall_status_icon, performance_rating=performance_rating, performance_status=performance_status, performance_status_icon=performance_status_icon, outreach_rating=outreach_rating, outreach_status=outreach_status, outreach_status_icon=outreach_status_icon)
 
 
 @app.route('/env')
 def calls_by_env():
     """Chart of API calls by environment."""
 
-    # Retrieve agg_request objects for calls in the production environment
+    # Retrieve request objects for calls in the production environment
 
-    prod_agg_requests = get_agg_request('%prod%')
+    prod_requests = get_request('%prod%')
     prod_total = get_env_total('%prod%')
 
-    stage_agg_requests = get_agg_request('%l1%')
+    stage_requests = get_request('%l1%')
     stage_total = get_env_total('%l1%')
 
-    internal_agg_requests = get_agg_request('%d1%')
+    internal_requests = get_request('%d1%')
     internal_total = get_env_total('%d1%')
 
-    return render_template("env.html", prod_agg_requests=prod_agg_requests, prod_total=prod_total, stage_agg_requests=stage_agg_requests, stage_total=stage_total, internal_agg_requests=internal_agg_requests, internal_total=internal_total)
+    return render_template("env.html", prod_requests=prod_requests, prod_total=prod_total, stage_requests=stage_requests, stage_total=stage_total, internal_requests=internal_requests, internal_total=internal_total)
 
 # @app.route('/prod.json')
 # def env_info():
 #     """Chart of API calls by environment."""
 
-#     # Retrieve agg_request objects for calls in the production environment
+#     # Retrieve request objects for calls in the production environment
 
-#     prod_agg_requests = get_agg_request('%prod%')
+#     prod_requests = get_request('%prod%')
 
-#     return jsonify(prod_agg_requests)
+#     return jsonify(prod_requests)
 
 @app.route('/type')
 def calls_by_type():
@@ -149,16 +87,16 @@ def calls_by_type():
 
     sql_filter = '%prod%'
 
-    agg_requests = db.session.query(Agg_Request).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
+    requests = db.session.query(Request).filter(Request.call_code.like(sql_filter)).group_by(Request.aggr_id).all()
 
-    success_totals = db.session.query(db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.call_code.like(sql_filter)).group_by(Agg_Request.aggr_id).all()
+    success_totals = db.session.query(db.func.sum(Request.success_count).label('total')).filter(Request.call_code.like(sql_filter)).group_by(Request.aggr_id).all()
 
     env_total = 0
 
     for success_total in success_totals:
         env_total += success_total.total
 
-    return render_template("env.html", agg_requests=agg_requests, env_total=env_total)
+    return render_template("env.html", requests=requests, env_total=env_total)
 
 
 @app.route('/d3')
