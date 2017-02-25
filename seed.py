@@ -2,7 +2,7 @@
 
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
-from model import Environment, API, Call, Request, Customer, Developer, Application, App_Used
+from model import Environment, API, Call, Request, Agg_Request, Customer, Developer, Application, App_Used
 
 from datetime import datetime
 
@@ -44,7 +44,7 @@ def read_csv_file():
 def load_customer(data):
     """Create customer table"""
 
-    for row in data[1:]:
+    for row in data:
         customer = row['customer']
 
         username = customer['username']
@@ -90,7 +90,7 @@ def load_customer(data):
 def load_developer(data):
     """Create developer table"""
 
-    for row in data[1:]:
+    for row in data:
         developer = row['developer']
 
         username = developer['username']
@@ -102,6 +102,7 @@ def load_developer(data):
         state = developer['state']
         country = developer['country']
         dev_type = developer['dev_type']
+        dev_key = developer['dev_key']
 
         dev = Developer(username=username,
                         first_name=first_name,
@@ -111,7 +112,8 @@ def load_developer(data):
                         city=city,
                         state=state,
                         country=country,
-                        dev_type=dev_type)
+                        dev_type=dev_type,
+                        dev_key=dev_key)
 
         try:
             db.session.add(dev)
@@ -124,18 +126,18 @@ def load_developer(data):
 def load_application(data):
     """Create application table"""
 
-    for row in data[1:]:
+    for row in data:
         application = row['app']
 
         app_name = application['app_name']
         app_type = application['app_type']
         dev_id = application['dev_id']
-        application_id = application['application_id']
+        application_key = application['application_key']
 
         app = Application(app_name=app_name,
                           app_type=app_type,
                           dev_id=dev_id,
-                          application_id=application_id)
+                          application_key=application_key)
 
         try:
             db.session.add(app)
@@ -148,7 +150,7 @@ def load_application(data):
 def load_app_used(data):
     """Create association table for customers and the apps they use"""
 
-    for row in data[1:]:
+    for row in data:
         customer = row['customer']
 
         for num in range(1, 4):
@@ -246,20 +248,18 @@ def load_call(data):
 
     # Read data from csv file and insert rows
     # But skip the header row: data[0]
-    for row in data[1:]:
+    for row in data:
         call = row['call']
 
         call_name = call['call_name']
         env_id = call['env_id']
         api_id = call['api_id']
-        key_type = call['key_type']
         endpoint = call['endpoint']
         method = call['method']
 
         call = Call(call_name=call_name,
                     env_id=env_id,
                     api_id=api_id,
-                    key_type=key_type,
                     endpoint=endpoint,
                     method=method)
 
@@ -273,23 +273,54 @@ def load_call(data):
 def load_request(data):
     """Load values for an individual request"""
 
-    for row in data[1:]:
+    for row in data:
         request = row['request']
 
         call_id = request['call_id']
+        method = request['method']
         app_id = request['app_id']
+        key_type = request['key_type']
         response_code = request['response_code']
         response_time = request['response_time']
         date = request['date']
 
         request = Request(call_id=call_id,
-                    app_id=app_id,
-                    response_code=response_code,
-                    response_time=response_time,
-                    date=date)
+                          method=method,
+                          app_id=app_id,
+                          key_type=key_type,
+                          response_code=response_code,
+                          response_time=response_time,
+                          date=date)
 
         # We need to add to the session or it won't ever be stored
         db.session.add(request)
+
+    # Once we're done, we should commit our work
+    db.session.commit()
+
+
+def load_agg_request(data):
+    """Load values for an individual agg_request"""
+
+    for row in data:
+        agg_request = row['agg_request']
+
+        call_id = agg_request['call_id']
+        success_count = agg_request['success_count']
+        fail_count = agg_request['fail_count']
+        total_responses = agg_request['total_responses']
+        avg_response_time = agg_request['avg_response_time']
+        date = agg_request['date']
+
+        agg_request = Agg_Request(call_id=call_id,
+                                  success_count=success_count,
+                                  fail_count=fail_count,
+                                  total_responses=total_responses,
+                                  avg_response_time=avg_response_time,
+                                  date=date)
+
+        # We need to add to the session or it won't ever be stored
+        db.session.add(agg_request)
 
     # Once we're done, we should commit our work
     db.session.commit()
@@ -313,3 +344,4 @@ if __name__ == "__main__":
     load_api(data)
     load_call(data)
     load_request(data)
+    load_agg_request(data)

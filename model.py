@@ -13,82 +13,6 @@ db = SQLAlchemy()
 # Model definitions
 
 
-class Environment(db.Model):
-    """Environment (production/staging) an API operates in."""
-
-    __tablename__ = "environment"
-
-    env_id = db.Column(db.Integer, primary_key=True)
-    env_name = db.Column(db.String(64), nullable=False, unique=True)
-    env_base_url = db.Column(db.String(128), nullable=False, unique=True)
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return "<Environment env_id={} env_name={} env_base_url={}>".format(self.env_name,
-                                                                       self.env_name,
-                                                                       self.env_base_url)
-
-
-class API(db.Model):
-    """API provided by a company."""
-
-    __tablename__ = "api"
-    __table_args__ = (db.UniqueConstraint('api_name', 'env_id', 'version', name='_api_env_version'),)
-
-    api_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    api_name = db.Column(db.String(64), nullable=False)
-    env_id = db.Column(db.Integer,
-                       db.ForeignKey("environment.env_id"),
-                       nullable=False)
-    version = db.Column(db.String(10), nullable=False)
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return "<API api_id={} api_name={} env_id={} version={}>".format(
-                                                                       self.api_id,
-                                                                       self.api_name,
-                                                                       self.env_id,
-                                                                       self.version)
-
-    # Define relationship to call
-    call = db.relationship("Call",
-                           backref=db.backref("api",
-                           order_by=api_id))
-    environment = db.relationship("Environment",
-                           backref=db.backref("api",
-                           order_by=env_id))
-
-
-class Call(db.Model):
-    """A call from a company's API."""
-
-    __tablename__ = "call"
-
-    call_id = db.Column(db.Integer, primary_key=True)
-    call_name = db.Column(db.String(128))
-    env_id = db.Column(db.Integer,
-                       db.ForeignKey("environment.env_id"),
-                       nullable=False)
-    api_id = db.Column(db.Integer,
-                       db.ForeignKey("api.api_id"),
-                       nullable=False)
-    key_type = db.Column(db.String(128))
-    endpoint = db.Column(db.String(128))
-    method = db.Column(db.String(10))
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return "<Call call_id={} call_name={} api_id={} endpoint={}, method={}>".format(
-                                                                       self.call_id,
-                                                                       self.call_name,
-                                                                       self.api_id,
-                                                                       self.endpoint,
-                                                                       self.method)
-
-
 class Customer(db.Model):
     """Customer properties."""
 
@@ -120,6 +44,80 @@ class Customer(db.Model):
                                                                        self.sub_end)
 
 
+class Environment(db.Model):
+    """Environment (production/staging) an API operates in."""
+
+    __tablename__ = "environment"
+
+    env_id = db.Column(db.Integer, primary_key=True)
+    env_name = db.Column(db.String(64), nullable=False, unique=True)
+    env_base_url = db.Column(db.String(128), nullable=False, unique=True)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Environment env_id={} env_name={} env_base_url={}>".format(self.env_name,
+                                                                            self.env_name,
+                                                                            self.env_base_url)
+
+
+class API(db.Model):
+    """API provided by a company."""
+
+    __tablename__ = "api"
+    __table_args__ = (db.UniqueConstraint('api_name', 'env_id', 'version', name='_api_env_version'),)
+
+    api_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    api_name = db.Column(db.String(64), nullable=False)
+    env_id = db.Column(db.Integer,
+                       db.ForeignKey("environment.env_id"),
+                       nullable=False)
+    version = db.Column(db.String(10), nullable=False)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<API api_id={} api_name={} env_id={} version={}>".format(self.api_id,
+                                                                         self.api_name,
+                                                                         self.env_id,
+                                                                         self.version)
+
+    # Define relationship to call
+    call = db.relationship("Call",
+                           backref=db.backref("api",
+                           order_by=api_id))
+    environment = db.relationship("Environment",
+                           backref=db.backref("api",
+                           order_by=env_id))
+
+
+class Call(db.Model):
+    """A call from a company's API."""
+
+    __tablename__ = "call"
+
+    call_id = db.Column(db.Integer, primary_key=True)
+    call_name = db.Column(db.String(128))
+    env_id = db.Column(db.Integer,
+                       db.ForeignKey("environment.env_id"),
+                       nullable=False)
+    api_id = db.Column(db.Integer,
+                       db.ForeignKey("api.api_id"),
+                       nullable=False)
+    endpoint = db.Column(db.String(128))
+    method = db.Column(db.String(10))
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Call call_id={} call_name={} api_id={} endpoint={} method={}>".format(
+                                                                       self.call_id,
+                                                                       self.call_name,
+                                                                       self.api_id,
+                                                                       self.endpoint,
+                                                                       self.method)
+
+
 class Developer(db.Model):
     """Developer properties."""
 
@@ -135,6 +133,7 @@ class Developer(db.Model):
     state = db.Column(db.String(128), nullable=True)
     country = db.Column(db.String(128), nullable=False)
     dev_type = db.Column(db.String(128), nullable=False)
+    dev_key = db.Column(db.String(128), nullable=True)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -143,7 +142,8 @@ class Developer(db.Model):
                                                                        self.dev_id,
                                                                        self.username,
                                                                        self.company,
-                                                                       self.dev_type)
+                                                                       self.dev_type,
+                                                                       self.dev_key)
 
 
 class Application(db.Model):
@@ -157,7 +157,7 @@ class Application(db.Model):
     dev_id = db.Column(db.Integer,
                         db.ForeignKey("developer.dev_id"),
                         nullable=False)
-    application_id = db.Column(db.String(128), nullable=False)
+    application_key = db.Column(db.String(128), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -181,9 +181,11 @@ class Request(db.Model):
     call_id = db.Column(db.Integer,
                         db.ForeignKey("call.call_id"),
                         nullable=False)
+    method = db.Column(db.String(128))
     app_id = db.Column(db.Integer,
                         db.ForeignKey("application.app_id"),
                         nullable=False)
+    key_type = db.Column(db.String(128))
     response_code = db.Column(db.String(128), nullable=False)
     response_time = db.Column(db.Numeric, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
@@ -191,9 +193,10 @@ class Request(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Request request_id={} call_id={} response_code={} response_time={} date={}>".format(
+        return "<Request request_id={} call_id={} key_type={} response_code={} response_time={} date={}>".format(
                                                                        self.request_id,
                                                                        self.call_id,
+                                                                       self.key_type,
                                                                        self.response_code,
                                                                        self.response_time,
                                                                        self.date)
@@ -238,13 +241,45 @@ class App_Used(db.Model):
                            backref=db.backref("app_used",
                            order_by=customer_id))
 
+
+class Agg_Request(db.Model):
+    """The the aggregated stats for each call."""
+
+    __tablename__ = "agg_request"
+
+    aggr_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    call_id = db.Column(db.Integer,
+                        db.ForeignKey("call.call_id"),
+                        nullable=False)
+    success_count = db.Column(db.Integer, nullable=False)
+    fail_count = db.Column(db.Integer, nullable=False)
+    total_responses = db.Column(db.Integer, nullable=False)
+    avg_response_time = db.Column(db.Numeric, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Agg_Request aggr_id={} call_id={} success_count={} fail_count={} total_responses={} avg_response_time={} date={}>".format(self.aggr_id,
+                          self.call_id,
+                          self.success_count,
+                          self.fail_count,
+                          self.total_responses,
+                          self.avg_response_time,
+                          self.date)
+
+    call = db.relationship("Call",
+                           backref=db.backref("agg_request",
+                           order_by=call_id))
+
 ##############################################################################
 # Helper functions
 
-def connect_to_db(app):
-    """Connect the database to our Flask app."""
 
-    # Configure to use our PstgreSQL database
+def connect_to_db(app):
+    """Connect the database to the Flask app."""
+
+    # Configure to use the PstgreSQL database
 
     # Uncomment to connect to test DB
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///test_dashboard'
