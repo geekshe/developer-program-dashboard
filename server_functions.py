@@ -152,6 +152,7 @@ def create_call_row(env_filter):
         row['call_name'] = get_call_name(obj.call_id)
         row['percent_volume'] = round(obj.success_count / env_total, 2)
         row['call_latency'] = obj.avg_response_time
+        row['date'] = obj.date
         call_rows.append(row)
 
     return call_rows
