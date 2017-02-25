@@ -148,8 +148,9 @@ def create_call_row(env_filter):
     for obj in env_calls:
         row = {}
         row['call_id'] = obj.call_id
+        # TODO: If call_id has already been used, use the same call name, and add the success count
         row['call_name'] = get_call_name(obj.call_id)
-        row['percent_volume'] = obj.success_count / env_total
+        row['percent_volume'] = round(obj.success_count / env_total, 2)
         row['call_latency'] = obj.avg_response_time
         call_rows.append(row)
 
