@@ -1,15 +1,36 @@
+import sqlalchemy
+from sqlalchemy import func
+
+from decimal import Decimal
+
+import json
+
+from model import Environment, API, Call, Request, Agg_Request, Customer, Developer, Application, App_Used
+from model import connect_to_db, db
+
 ############################## Helper Functions ################################
 
-def get_request(sql_filter):
+# env_id 1 = production
+# env_id 2 = staging
+# env_id 3 = partner
+# env_id 4 = internal
 
-    # Retrieves request objects for a specified environment
-    requests = db.session.query(Request).filter(Request.call_code.like(sql_filter)).group_by(Request.aggr_id).all()
+
+def get_agg_request(sql_filter):
+    """Retrieves request objects for a specified environment"""
+
+    sql_filter = sql_filter
+
+    requests = db.session.query(Agg_Request).filter(Agg_Request.env_id == sql_filter).group_by(Agg_Request.aggr_id).all()
 
     return requests
 
+
 def get_env_total(sql_filter):
 
-    success_totals = db.session.query(db.func.sum(Request.success_count).label('total')).filter(Request.call_code.like(sql_filter)).group_by(Request.aggr_id).all()
+    sql_filter = sql_filter
+
+    success_totals = db.session.query(db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.env_id == sql_filter).group_by(Agg_Request.aggr_id).all()
 
     env_total = Decimal(0)
 
@@ -18,16 +39,17 @@ def get_env_total(sql_filter):
 
     return env_total
 
+
 def calc_call_volume(sql_filter):
 
     sql_filter = sql_filter
 
-    env_requests = get_request(sql_filter)
+    env_requests = get_agg_request(sql_filter)
     env_total = get_env_total(sql_filter)
 
     env_call_volumes = {}
     for request in env_requests:
-        env_call_volumes[request.call_code] = Decimal(request.success_count) / env_total
+        env_call_volumes[request.call_id] = Decimal(request.success_count) / env_total
 
     return env_call_volumes
 
@@ -37,7 +59,7 @@ def get_weighted_avg_latency(sql_filter):
     sql_filter = sql_filter
 
     # Get the latency for each call. Returns a list.
-    all_latency = db.session.query(Request.avg_response_time).filter(Request.call_code.like(sql_filter)).all()
+    all_latency = db.session.query(Agg_Request.avg_response_time).filter(Agg_Request.env_id == sql_filter).all()
 
     # Intitialize the total_latency variable
     total_latency = Decimal(0)
@@ -68,9 +90,16 @@ def calc_rating(sql_filter, status_type):
     return rating
 
 
-def get_status(status_type):
+def calc_latency(env):
+    pass
 
+
+def get_status(sql_filter, status_type):
+
+    sql_filter = sql_filter
     status_type = status_type
+
+    avg_latency = get_weighted_avg_latency(sql_filter)
 
     if avg_latency < 200:
         status = 'green'

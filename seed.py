@@ -1,6 +1,5 @@
 """Utility file to seed data from Mashery CSV data dump"""
 
-from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from model import Environment, API, Call, Request, Agg_Request, Customer, Developer, Application, App_Used
 
@@ -306,6 +305,7 @@ def load_agg_request(data):
         agg_request = row['agg_request']
 
         call_id = agg_request['call_id']
+        env_id = agg_request['env_id']
         success_count = agg_request['success_count']
         fail_count = agg_request['fail_count']
         total_responses = agg_request['total_responses']
@@ -313,6 +313,7 @@ def load_agg_request(data):
         date = agg_request['date']
 
         agg_request = Agg_Request(call_id=call_id,
+                                  env_id=env_id,
                                   success_count=success_count,
                                   fail_count=fail_count,
                                   total_responses=total_responses,

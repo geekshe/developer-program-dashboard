@@ -13,9 +13,10 @@ from decimal import Decimal
 import json
 
 # Import my data model
-from model import Environment, API, Call, Request, connect_to_db, db
+from model import Environment, API, Call, Request, Agg_Request, Customer, Developer, Application, App_Used
+from model import connect_to_db, db
 
-from server_functions import get_request, get_env_total, calc_call_volume, get_weighted_avg_latency
+from server_functions import get_agg_request, get_env_total, calc_call_volume, get_weighted_avg_latency
 
 ################################# Web App ######################################
 
@@ -29,16 +30,22 @@ app.jinja_env.undefined = StrictUndefined
 
 ############################### Flask Routes ###################################
 
+# env_id 1 = production
+# env_id 2 = staging
+# env_id 3 = partner
+# env_id 4 = internal
+
+
 @app.route('/')
 def index():
     """Home page."""
 
-    sql_filter = '%prod%'
+    sql_filter = 1
 
     avg_latency = get_weighted_avg_latency(sql_filter)
 
-    # Compare avg_latency to a range of values. 
-    # Based on place in range, choose green/yellow/red icon. 
+    # Compare avg_latency to a range of values.
+    # Based on place in range, choose green/yellow/red icon.
 
     if avg_latency < 200:
         overall_status = 'green'

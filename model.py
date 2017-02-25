@@ -35,13 +35,12 @@ class Customer(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Customer customer_id={} username={} sub_status={} sub_level={} sub_start={} sub_end={}>".format(
-                                                                       self.customer_id,
-                                                                       self.username,
-                                                                       self.sub_status,
-                                                                       self.sub_level,
-                                                                       self.sub_start,
-                                                                       self.sub_end)
+        return "<Customer customer_id={} username={} sub_status={} sub_level={} sub_start={} sub_end={}>".format(self.customer_id,
+                                                        self.username,
+                                                        self.sub_status,
+                                                        self.sub_level,
+                                                        self.sub_start,
+                                                        self.sub_end)
 
 
 class Environment(db.Model):
@@ -57,15 +56,16 @@ class Environment(db.Model):
         """Provide helpful representation when printed."""
 
         return "<Environment env_id={} env_name={} env_base_url={}>".format(self.env_name,
-                                                                            self.env_name,
-                                                                            self.env_base_url)
+                                          self.env_name,
+                                          self.env_base_url)
 
 
 class API(db.Model):
     """API provided by a company."""
 
     __tablename__ = "api"
-    __table_args__ = (db.UniqueConstraint('api_name', 'env_id', 'version', name='_api_env_version'),)
+    __table_args__ = (db.UniqueConstraint('api_name', 'env_id', 'version',
+                                          name='_api_env_version'),)
 
     api_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     api_name = db.Column(db.String(64), nullable=False)
@@ -78,17 +78,18 @@ class API(db.Model):
         """Provide helpful representation when printed."""
 
         return "<API api_id={} api_name={} env_id={} version={}>".format(self.api_id,
-                                                                         self.api_name,
-                                                                         self.env_id,
-                                                                         self.version)
+                                     self.api_name,
+                                     self.env_id,
+                                     self.version)
 
     # Define relationship to call
     call = db.relationship("Call",
-                           backref=db.backref("api",
-                           order_by=api_id))
+                            backref=db.backref("api",
+                            order_by=api_id))
+
     environment = db.relationship("Environment",
-                           backref=db.backref("api",
-                           order_by=env_id))
+                                   backref=db.backref("api",
+                                   order_by=env_id))
 
 
 class Call(db.Model):
@@ -110,12 +111,11 @@ class Call(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Call call_id={} call_name={} api_id={} endpoint={} method={}>".format(
-                                                                       self.call_id,
-                                                                       self.call_name,
-                                                                       self.api_id,
-                                                                       self.endpoint,
-                                                                       self.method)
+        return "<Call call_id={} call_name={} api_id={} endpoint={} method={}>".format(self.call_id,
+                                    self.call_name,
+                                    self.api_id,
+                                    self.endpoint,
+                                    self.method)
 
 
 class Developer(db.Model):
@@ -138,12 +138,11 @@ class Developer(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Developer dev_id={} username={} company={} dev_type={}>".format(
-                                                                       self.dev_id,
-                                                                       self.username,
-                                                                       self.company,
-                                                                       self.dev_type,
-                                                                       self.dev_key)
+        return "<Developer dev_id={} username={} company={} dev_type={}>".format(self.dev_id,
+                                      self.username,
+                                      self.company,
+                                      self.dev_type,
+                                      self.dev_key)
 
 
 class Application(db.Model):
@@ -155,17 +154,16 @@ class Application(db.Model):
     app_name = db.Column(db.String(128), nullable=False)
     app_type = db.Column(db.String(128), nullable=False)
     dev_id = db.Column(db.Integer,
-                        db.ForeignKey("developer.dev_id"),
-                        nullable=False)
+                       db.ForeignKey("developer.dev_id"),
+                       nullable=False)
     application_key = db.Column(db.String(128), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Application app_id={} app_name={} app_type={}>".format(
-                                                                       self.app_id,
-                                                                       self.app_name,
-                                                                       self.app_type)
+        return "<Application app_id={} app_name={} app_type={}>".format(self.app_id,
+                                      self.app_name,
+                                      self.app_type)
 
     developer = db.relationship("Developer",
                            backref=db.backref("application",
@@ -183,8 +181,8 @@ class Request(db.Model):
                         nullable=False)
     method = db.Column(db.String(128))
     app_id = db.Column(db.Integer,
-                        db.ForeignKey("application.app_id"),
-                        nullable=False)
+                       db.ForeignKey("application.app_id"),
+                       nullable=False)
     key_type = db.Column(db.String(128))
     response_code = db.Column(db.String(128), nullable=False)
     response_time = db.Column(db.Numeric, nullable=False)
@@ -193,13 +191,12 @@ class Request(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Request request_id={} call_id={} key_type={} response_code={} response_time={} date={}>".format(
-                                                                       self.request_id,
-                                                                       self.call_id,
-                                                                       self.key_type,
-                                                                       self.response_code,
-                                                                       self.response_time,
-                                                                       self.date)
+        return "<Request request_id={} call_id={} key_type={} response_code={} response_time={} date={}>".format(self.request_id,
+                                                                    self.call_id,
+                                                                    self.key_type,
+                                                                    self.response_code,
+                                                                    self.response_time,
+                                                                    self.date)
 
     call = db.relationship("Call",
                            backref=db.backref("request",
@@ -217,21 +214,20 @@ class App_Used(db.Model):
 
     use_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     app_id = db.Column(db.Integer,
-                        db.ForeignKey("application.app_id"),
-                        nullable=False)
+                       db.ForeignKey("application.app_id"),
+                       nullable=False)
     customer_id = db.Column(db.Integer,
-                        db.ForeignKey("customer.customer_id"),
-                        nullable=False)
+                            db.ForeignKey("customer.customer_id"),
+                            nullable=False)
     use_start = db.Column(db.DateTime, nullable=False)
     use_end = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<App_Used use_id={} app_id={} customer_id={}>".format(
-                                                                       self.use_id,
-                                                                       self.app_id,
-                                                                       self.customer_id)
+        return "<App_Used use_id={} app_id={} customer_id={}>".format(self.use_id,
+                                                                      self.app_id,
+                                                                      self.customer_id)
 
     application = db.relationship("Application",
                            backref=db.backref("app_used",
@@ -251,6 +247,9 @@ class Agg_Request(db.Model):
     call_id = db.Column(db.Integer,
                         db.ForeignKey("call.call_id"),
                         nullable=False)
+    env_id = db.Column(db.Integer,
+                       db.ForeignKey("environment.env_id"),
+                       nullable=False)
     success_count = db.Column(db.Integer, nullable=False)
     fail_count = db.Column(db.Integer, nullable=False)
     total_responses = db.Column(db.Integer, nullable=False)
@@ -261,16 +260,21 @@ class Agg_Request(db.Model):
         """Provide helpful representation when printed."""
 
         return "<Agg_Request aggr_id={} call_id={} success_count={} fail_count={} total_responses={} avg_response_time={} date={}>".format(self.aggr_id,
-                          self.call_id,
-                          self.success_count,
-                          self.fail_count,
-                          self.total_responses,
-                          self.avg_response_time,
-                          self.date)
+                           self.call_id,
+                           self.success_count,
+                           self.fail_count,
+                           self.total_responses,
+                           self.avg_response_time,
+                           self.date)
 
     call = db.relationship("Call",
                            backref=db.backref("agg_request",
                            order_by=call_id))
+
+    environment = db.relationship("Environment",
+                                  backref=db.backref("agg_request",
+                                  order_by=env_id))
+
 
 ##############################################################################
 # Helper functions
