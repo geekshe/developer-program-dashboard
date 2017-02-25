@@ -16,21 +16,21 @@ from model import connect_to_db, db
 # env_id 4 = internal
 
 
-def get_agg_request(sql_filter):
+def get_agg_request(env_filter):
     """Retrieves request objects for a specified environment"""
 
-    sql_filter = sql_filter
+    env_filter = env_filter
 
-    requests = db.session.query(Agg_Request).filter(Agg_Request.env_id == sql_filter).group_by(Agg_Request.aggr_id).all()
+    requests = db.session.query(Agg_Request).filter(Agg_Request.env_id == env_filter).group_by(Agg_Request.aggr_id).all()
 
     return requests
 
 
-def get_env_total(sql_filter):
+def get_env_total(env_filter):
 
-    sql_filter = sql_filter
+    env_filter = env_filter
 
-    success_totals = db.session.query(db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.env_id == sql_filter).group_by(Agg_Request.aggr_id).all()
+    success_totals = db.session.query(db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.env_id == env_filter).group_by(Agg_Request.aggr_id).all()
 
     env_total = Decimal(0)
 
@@ -40,12 +40,12 @@ def get_env_total(sql_filter):
     return env_total
 
 
-def calc_call_volume(sql_filter):
+def calc_call_volume(env_filter):
 
-    sql_filter = sql_filter
+    env_filter = env_filter
 
-    env_requests = get_agg_request(sql_filter)
-    env_total = get_env_total(sql_filter)
+    env_requests = get_agg_request(env_filter)
+    env_total = get_env_total(env_filter)
 
     env_call_volumes = {}
     for request in env_requests:
@@ -54,19 +54,19 @@ def calc_call_volume(sql_filter):
     return env_call_volumes
 
 
-def get_weighted_avg_latency(sql_filter):
+def get_weighted_avg_latency(env_filter):
 
-    sql_filter = sql_filter
+    env_filter = env_filter
 
     # Get the latency for each call. Returns a list.
-    all_latency = db.session.query(Agg_Request.avg_response_time).filter(Agg_Request.env_id == sql_filter).all()
+    all_latency = db.session.query(Agg_Request.avg_response_time).filter(Agg_Request.env_id == env_filter).all()
 
     # Intitialize the total_latency variable
     total_latency = Decimal(0)
 
     # Get the volume percent for each call
     # Returns a dictionary
-    env_call_volumes = calc_call_volume(sql_filter)
+    env_call_volumes = calc_call_volume(env_filter)
 
     # Multiply the latency by the volume percent for each call
     # Add those together and divide by the number of calls
@@ -82,9 +82,10 @@ def get_weighted_avg_latency(sql_filter):
 
     # avg_latency = total_latency / len(all_latency)
 
-def calc_rating(sql_filter, status_type):
 
-    sql_filter = sql_filter
+def calc_rating(env_filter, status_type):
+
+    env_filter = env_filter
     status_type = status_type
 
     return rating
@@ -94,21 +95,62 @@ def calc_latency(env):
     pass
 
 
-def get_status(sql_filter, status_type):
+def get_status(env_filter, status_type):
 
-    sql_filter = sql_filter
+    env_filter = env_filter
     status_type = status_type
 
-    avg_latency = get_weighted_avg_latency(sql_filter)
+    status_rating = {}
 
-    if avg_latency < 200:
-        status = 'green'
-        status_icon = 'fa-check-square'
-    elif 200 <= avg_latency < 800:
-        status = 'yellow'
-        status_icon = 'fa-exclamation'
-    elif avg_latency >= 800:
-        status = 'red'
-        status_icon = 'fa-flash'
+    status_rating['avg_latency'] = get_weighted_avg_latency(env_filter)
 
-    return status, status_icon
+    # Compare avg_latency to a range of values.
+    # Based on place in range, choose green/yellow/red icon.
+    if status_rating['avg_latency'] < 200:
+        status_rating['status_color'] = 'green'
+        status_rating['rating'] = 9
+        status_rating['status_icon'] = 'fa-check-square'
+    elif 200 <= status_rating['avg_latency'] < 800:
+        status_rating['status_color'] = 'yellow'
+        status_rating['rating'] = 5
+        status_rating['status_icon'] = 'fa-exclamation'
+    elif status_rating['avg_latency'] >= 800:
+        status_rating['status_color'] = 'red'
+        status_rating['rating'] = 2
+        status_rating['status_icon'] = 'fa-flash'
+
+    return status_rating
+
+
+def get_call_name(call_id):
+    """Given a single call_id (which comes from the agg_request table) retrieve
+        that call object (from the call table) and return the call_name.
+
+        Retrieving the whole object allows more flexibility in what can be returned."""
+
+    this_call_id = call_id
+    this_call_name = db.session.query(Call).filter(Call.call_id == this_call_id).first()
+
+    return this_call_name.call_name
+
+
+def create_call_row(env_filter):
+
+    env_filter = env_filter
+
+    env_total = get_env_total(env_filter)
+
+    # Object containing individual agg_requests
+    env_calls = get_agg_request(env_filter)
+
+    call_rows = []
+
+    for obj in env_calls:
+        row = {}
+        row['call_id'] = obj.call_id
+        row['call_name'] = get_call_name(obj.call_id)
+        row['percent_volume'] = obj.success_count / env_total
+        row['call_latency'] = obj.avg_response_time
+        call_rows.append(row)
+
+    return call_rows

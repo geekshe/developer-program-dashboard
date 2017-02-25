@@ -7,15 +7,15 @@
 
 <div class="row">
     <div class="col-lg-3 col-md-6">
-        <div class="panel panel-{{ overall_status }}">
+        <div class="panel panel-{{ overall_status['status_color'] }}">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
                         <!-- Status icon -->
-                        <i class="fa {{overall_status_icon}} fa-5x"></i>
+                        <i class="fa {{ overall_status['status_icon'] }} fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">{{ overall_rating }}/10</div>
+                        <div class="huge">{{ overall_status['rating'] }}/10</div>
                         <div>Overall Status</div>
                     </div>
                 </div>
@@ -33,15 +33,15 @@
 
 <div class="row">
     <div class="col-lg-3 col-md-6">
-        <div class="panel panel-{{ performance_status }}">
+        <div class="panel panel-{{ performance_status['status_color'] }}">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
                         <!-- Status icon -->
-                        <i class="fa {{performance_status_icon}} fa-5x"></i>
+                        <i class="fa {{ performance_status['status_icon'] }} fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">{{ performance_rating }}/10</div>
+                        <div class="huge">{{ performance_status['rating'] }}/10</div>
                         <div>Performance Status</div>
                     </div>
                 </div>
@@ -59,15 +59,15 @@
 
 <div class="row">
     <div class="col-lg-3 col-md-6">
-        <div class="panel panel-{{ outreach_status }}">
+        <div class="panel panel-{{ outreach_status['status_color'] }}">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
                         <!-- Status icon -->
-                        <i class="fa {{outreach_status_icon}} fa-5x"></i>
+                        <i class="fa {{ outreach_status['status_icon'] }} fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">{{ outreach_rating }}/10</div>
+                        <div class="huge">{{ outreach_status['rating'] }}/10</div>
                         <div>Outreach Status</div>
                     </div>
                 </div>

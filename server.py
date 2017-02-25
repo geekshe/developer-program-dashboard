@@ -16,7 +16,7 @@ import json
 from model import Environment, API, Call, Request, Agg_Request, Customer, Developer, Application, App_Used
 from model import connect_to_db, db
 
-from server_functions import get_agg_request, get_env_total, calc_call_volume, get_weighted_avg_latency
+from server_functions import get_agg_request, get_env_total, calc_call_volume, get_weighted_avg_latency, get_status, get_call_name, create_call_row
 
 ################################# Web App ######################################
 
@@ -40,63 +40,39 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Home page."""
 
-    sql_filter = 1
+    # Get dictionay of status attributes by passing in the env_id and the
+    # status type: overall, performance, or outreach
+    overall_status = get_status(1, 'overall')
+    performance_status = get_status(2, 'performance')
+    outreach_status = get_status(4, 'outreach')
 
-    avg_latency = get_weighted_avg_latency(sql_filter)
-
-    # Compare avg_latency to a range of values.
-    # Based on place in range, choose green/yellow/red icon.
-
-    if avg_latency < 200:
-        overall_status = 'green'
-        overall_status_icon = 'fa-check-square'
-    elif 200 <= avg_latency < 800:
-        overall_status = 'yellow'
-        overall_status_icon = 'fa-exclamation'
-    elif avg_latency >= 800:
-        overall_status = 'red'
-        overall_status_icon = 'fa-flash'
-
-    # Pass icon to template.
-    return render_template("homepage.html", overall_rating=overall_rating, overall_status=overall_status, overall_status_icon=overall_status_icon, performance_rating=performance_rating, performance_status=performance_status, performance_status_icon=performance_status_icon, outreach_rating=outreach_rating, outreach_status=outreach_status, outreach_status_icon=outreach_status_icon)
+    # Pass dictionary containing status color, rating, and icon to template.
+    return render_template("homepage.html", overall_status=overall_status, performance_status=performance_status, outreach_status=outreach_status)
 
 
 @app.route('/env')
 def calls_by_env():
     """Chart of API calls by environment."""
 
-    # Retrieve request objects for calls in the production environment
+    # Retrieve request objects for calls in each environment
+    prod_calls = create_call_row(1)
 
-    prod_requests = get_request('%prod%')
-    prod_total = get_env_total('%prod%')
+    stage_calls = create_call_row(2)
 
-    stage_requests = get_request('%l1%')
-    stage_total = get_env_total('%l1%')
+    internal_calls = create_call_row(4)
 
-    internal_requests = get_request('%d1%')
-    internal_total = get_env_total('%d1%')
+    return render_template("env.html", prod_calls=prod_calls, stage_calls=stage_calls, internal_calls=internal_calls)
 
-    return render_template("env.html", prod_requests=prod_requests, prod_total=prod_total, stage_requests=stage_requests, stage_total=stage_total, internal_requests=internal_requests, internal_total=internal_total)
-
-# @app.route('/prod.json')
-# def env_info():
-#     """Chart of API calls by environment."""
-
-#     # Retrieve request objects for calls in the production environment
-
-#     prod_requests = get_request('%prod%')
-
-#     return jsonify(prod_requests)
 
 @app.route('/type')
 def calls_by_type():
     """Chart of API calls by developer type."""
 
-    sql_filter = '%prod%'
+    env_filter = '%prod%'
 
-    requests = db.session.query(Request).filter(Request.call_code.like(sql_filter)).group_by(Request.aggr_id).all()
+    requests = db.session.query(Request).filter(Request.call_code.like(env_filter)).group_by(Request.aggr_id).all()
 
-    success_totals = db.session.query(db.func.sum(Request.success_count).label('total')).filter(Request.call_code.like(sql_filter)).group_by(Request.aggr_id).all()
+    success_totals = db.session.query(db.func.sum(Request.success_count).label('total')).filter(Request.call_code.like(env_filter)).group_by(Request.aggr_id).all()
 
     env_total = 0
 
