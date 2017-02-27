@@ -16,7 +16,7 @@ import json
 from model import Environment, API, Call, Request, Agg_Request, Customer, Developer, Application, App_Used
 from model import connect_to_db, db
 
-from server_functions import get_agg_request, get_env_total, calc_call_volume, get_weighted_avg_latency, get_status, get_call_name, create_call_row
+from server_functions import get_agg_request, get_env_total, calc_call_volume, get_weighted_avg_latency, get_status, get_call_name, create_call_row, calc_ltv, calc_arpu, calc_date_length
 
 ################################# Web App ######################################
 
@@ -62,6 +62,16 @@ def calls_by_env():
     internal_calls = create_call_row(4)
 
     return render_template("env.html", prod_calls=prod_calls, stage_calls=stage_calls, internal_calls=internal_calls)
+
+
+@app.route('/bubble')
+def apps_by_impact():
+    """Chart of API calls by environment."""
+
+    # Retrieve request objects for calls in each environment
+    prod_calls = create_call_row(1)
+
+    return render_template("bubble.html", prod_calls=prod_calls)
 
 
 @app.route('/type')

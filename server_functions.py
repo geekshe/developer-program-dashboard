@@ -8,6 +8,8 @@ import json
 from model import Environment, API, Call, Request, Agg_Request, Customer, Developer, Application, App_Used
 from model import connect_to_db, db
 
+from datetime import datetime
+
 ############################## Helper Functions ################################
 
 # env_id 1 = production
@@ -143,16 +145,77 @@ def create_call_row(env_filter):
     # Object containing individual agg_requests
     env_calls = get_agg_request(env_filter)
 
-    call_rows = []
+    call_data = []
 
-    for obj in env_calls:
-        row = {}
-        row['call_id'] = obj.call_id
+    for call in env_calls:
+        this_call = {}
+        this_call['call_id'] = call.call_id
         # TODO: If call_id has already been used, use the same call name, and add the success count
-        row['call_name'] = get_call_name(obj.call_id)
-        row['percent_volume'] = round(obj.success_count / env_total, 2)
-        row['call_latency'] = obj.avg_response_time
-        row['date'] = obj.date
-        call_rows.append(row)
+        this_call['call_name'] = get_call_name(call.call_id)
+        this_call['percent_volume'] = round(call.success_count / env_total, 2)
+        this_call['call_latency'] = call.avg_response_time
+        this_call['date'] = call.date
+        call_data.append(this_call)
 
-    return call_rows
+    return call_data
+
+
+def calc_arpu():
+
+    # Retrieve all subscribing customers
+    all_customers = db.session.query(Customer).filter(Customer.sub_status == 'paid').all()
+
+    all_customer_data = []
+
+    # Iterate through each customer and grab certain attributes
+    for customer in all_customers:
+        this_cust = {}
+        this_cust['cust_id'] = customer.customer_id
+        this_cust['revenue'] = customer.revenue
+
+        all_customer_data.append(this_cust)
+
+    return all_customer_data
+
+def calc_ltv():
+
+    # Retrieve all subscribing customers
+    all_customers = db.session.query(Customer).filter(Customer.sub_status == 'paid').all()
+
+    all_customer_data = []
+
+    for customer in all_customers:
+        this_cust = {}
+        this_cust['cust_id'] = customer.customer_id
+        this_cust['revenue'] = customer.revenue
+        this_cust['sub_months'] = calc_date_length(customer.sub_start, customer.sub_end)
+        this_cust['ltv'] = this_cust['revenue'] * this_cust['sub_months']
+
+        all_customer_data.append(this_cust)
+
+    return all_customer_data
+
+def calc_conversion():
+    pass
+
+def calc_retention():
+    pass
+
+def calc_date_length(start_date, end_date):
+
+    if end_date is None:
+        end_date = datetime.today()
+
+    elapsed_time = end_date - start_date
+    elapsed_time_days = Decimal(elapsed_time.days)
+    num_of_months = elapsed_time_days // Decimal(30)
+
+    return num_of_months
+
+
+def get_app_data(env_filter, date):
+
+    env_filter = env_filter
+    date = date
+
+    apps = db.session.query(Agg_Request).filter(Agg_Request.env_id == env_filter).group_by(Agg_Request.aggr_id).all()
