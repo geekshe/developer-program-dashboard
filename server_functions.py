@@ -135,47 +135,24 @@ def get_call_name(call_id):
 
 
 def create_call_row(env_filter):
-    """ Returns data in this format:
-    {date: [call_name: {call_id: 3}, call_name: {call_id: 3}, call_name: {call_id: 3}]}
-    """
 
     env_filter = env_filter
 
     env_total = get_env_total(env_filter)
 
     # Object containing individual agg_requests
-    all_dates = get_agg_request(env_filter)
-    group_by_date = {}
+    env_calls = get_agg_request(env_filter)
 
-    calls = []
-    call = {}
-    call_values = {}
+    call_rows = []
 
-    for obj in all_dates:
-        group_by_date = {}
-        date_val = []
-        # group_by_date['date'] = date_val
-        call_name = {}
-        values = {}
+    for obj in env_calls:
+        row = {}
+        row['call_id'] = obj.call_id
+        # TODO: If call_id has already been used, use the same call name, and add the success count
+        row['call_name'] = get_call_name(obj.call_id)
+        row['percent_volume'] = round(obj.success_count / env_total, 2)
+        row['call_latency'] = obj.avg_response_time
+        row['date'] = obj.date
+        call_rows.append(row)
 
-        # get_call_name(obj.call_id)
-
-        # values['call_id'] = obj.call_id
-        # # TODO: If call_id has already been used, use the same call name, and add the success count
-        # # values['call_name'] = get_call_name(obj.call_id)
-        # values['percent_volume'] = round(obj.success_count / env_total, 2)
-        # values['call_latency'] = obj.avg_response_time
-        # # values['date'] = obj.date
-
-        # group_by_date[get_call_name(obj.call_id)] = values
-        # date_val.append(group_by_date)
-
-
-        # if obj.date in by_date:
-
-        # by_date[obj.date] = row
-
-        # call_rows.append(by_date)
-
-
-    return group_by_date
+    return call_rows
