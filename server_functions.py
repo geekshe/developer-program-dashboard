@@ -98,6 +98,7 @@ def calc_latency(env):
 
 
 def get_status(env_filter, status_type):
+    """Given a environment filter and a type of status calculation to do, calculate the status, compare it to a range, and return the status attributes."""
 
     env_filter = env_filter
     status_type = status_type
@@ -161,6 +162,9 @@ def create_call_row(env_filter):
 
 
 def calc_arpu():
+    """Calculate the revenue for a paying customer. In this case, with our anonymized data, this is just the customer.revenue value.
+
+    Return this data as a list of dictionaries, one per paying customer."""
 
     # Retrieve all subscribing customers
     all_customers = db.session.query(Customer).filter(Customer.sub_status == 'paid').all()
@@ -178,6 +182,9 @@ def calc_arpu():
     return all_customer_data
 
 def calc_ltv():
+    """If a customer has a paid subscription, determine what their monthly revenue is, how long they've had the paid subscription, and multiply the two values to get LTV (life time value).
+
+    Return this data as a list of dictionaries, one per paying customer."""
 
     # Retrieve all subscribing customers
     all_customers = db.session.query(Customer).filter(Customer.sub_status == 'paid').all()
@@ -196,25 +203,57 @@ def calc_ltv():
     return all_customer_data
 
 def calc_conversion():
+    """For paying customers (whether or not their subscription is currently active), determine if their subscription started within 30 days of their using an app. If so, that counts as an app-driven conversion and can be attributed to that app."""
+
+    # Retrieve all subscribing customers
+    all_customers = db.session.query(Customer).filter(Customer.sub_status == 'paid').all()
+
+    # Iterate through each paying customer.
+    # Find their subscription start_date.
+    # Retrieve any apps they have used, and the start time for each app
+    # Determine if any sub start date is within 30 days of the app start date
+    # If so, app conversion is true (or maybe increases the counter for that app?)
+    # If another app is also within the 30 days, that app has also
+    #   contributed to conversion (Increment that app's counter too?)
+    # Return a list of apps and their counter values?
+    # That counter value determines the x axis of the bubble?
+
     pass
 
+
 def calc_retention():
+    # Iterate through each paying customer.
+    # Find their subscription duration.
+    # Retrieve any apps they have used.
+    # Retention = customers with apps remain paying customers longer
+    # Retention per app = customers with certain apps remain paying
+    #   customers even longer than the app average
+    # That counter value determines the y axis of the bubble?
+    # Non-app retention with be a constant in this case
     pass
 
 def calc_date_length(start_date, end_date):
+    """Given a date range, calculate the number of days between them. Divide by 30 to get the number of months (with no remainder)."""
 
+    # If a subscription is still active, it has no end_date. In that case,
+    # set the end_date equal to today's date for our calculations.
     if end_date is None:
         end_date = datetime.today()
 
     elapsed_time = end_date - start_date
+
+    # Convert the datetime object to a Decimal containing the number of days
     elapsed_time_days = Decimal(elapsed_time.days)
+
+    # Subscriptions are billed once per 30 day period, so we can throw away
+    # the remainder and just look at the number of months
     num_of_months = elapsed_time_days // Decimal(30)
 
     return num_of_months
 
 
 def get_app_data(env_filter, date):
-
+    # In progress
     env_filter = env_filter
     date = date
 
