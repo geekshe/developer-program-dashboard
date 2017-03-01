@@ -8,7 +8,7 @@ import json
 from model import Environment, API, Call, Request, Agg_Request, Customer, Developer, Application, App_Used
 from model import connect_to_db, db
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 ############################## Helper Functions ################################
 
@@ -205,21 +205,42 @@ def calc_ltv():
 def calc_conversion():
     """For paying customers (whether or not their subscription is currently active), determine if their subscription started within 30 days of their using an app. If so, that counts as an app-driven conversion and can be attributed to that app."""
 
+    conversion_within_days = 30
     # Retrieve all subscribing customers
     all_customers = db.session.query(Customer).filter(Customer.sub_status == 'paid').all()
 
+    # Initialize an empty list to hold app_id's and the number of customers they converted
+    all_app_conversions = {}
+    counter = 0
+
     # Iterate through each paying customer.
-    # Find their subscription start_date.
-    # Retrieve any apps they have used, and the start time for each app
-    # Determine if any sub start date is within 30 days of the app start date
-    # If so, app conversion is true (or maybe increases the counter for that app?)
-    # If another app is also within the 30 days, that app has also
-    #   contributed to conversion (Increment that app's counter too?)
-    # Return a list of apps and their counter values?
-    # That counter value determines the x axis of the bubble?
+    for customer in all_customers:
+        # Find their subscription start date.
+        cust_id = customer.customer_id
+        sub_start = customer.sub_start
+        # Retrieve any apps they have used, and the start time for each app
+        all_cust_apps = db.session.query(App_Used).filter(App_Used.customer_id == cust_id).all()
+        # Loop through each app a customer uses
+        for app in all_cust_apps:
+            this_app = {}
+            app_id = app.app_id
+            app_id_str = str(app.app_id)
+            use_start = app.use_start
 
-    pass
+            # Determine if any sub start date is within 30 days of the app start date
+            if sub_start < use_start + timedelta(days=conversion_within_days):
+                # If so, check to see if that app is in the list already
+                if app_id in all_app_conversions:
+                    this_app['counter'] = this_app.get('counter', 0) + 1
+                    # print 'I am in the list already'
+                # Increment the conversion counter for any other app they
+                # used within the 30 days.
+                all_app_conversions[app_id_str] = this_app
+                # Clear the this_app container
 
+    # Return a list of apps and their counter values
+    # That counter value determines the x axis of the bubble
+    return all_app_conversions
 
 def calc_retention():
     # Iterate through each paying customer.
