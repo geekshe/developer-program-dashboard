@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% block title %}App Contributions to Customer Success{% endblock %}
+
 {% block content %}
 
   <!-- jQuery -->
@@ -8,7 +10,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
   <script src="/static/js/call_by_date.js"></script>
 
-
+<h1>App Contributions to Customer Success</h1>
 <div class="row">
   <!-- /.col-lg-4 -->
   <div class="col-lg-4">
@@ -20,7 +22,19 @@
         data: {
             labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
             datasets: [
-        {
+            {% for app in app_contributions %}
+              {
+                label: "{{ app['app_name'] }}",
+                data: [
+                    {
+                        x: {{ app['ltv'] }},
+                        y: {{ app['arpu'] }},
+                        r: {{ app['retention'] }}
+                    },
+                ],
+              },
+            {% endfor %}
+            {
             label: 'First Dataset',
             data: [
                 {
