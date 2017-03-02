@@ -16,14 +16,14 @@ import json
 from model import Environment, API, Call, Request, Agg_Request, Customer, Developer, Application, App_Used
 from model import connect_to_db, db
 
-from server_functions import get_agg_request, get_env_total, calc_call_volume, get_weighted_avg_latency, get_status, get_call_name, create_call_row, calc_ltv, calc_arpu, calc_date_length, calc_conversion
+from server_functions import get_agg_request, get_env_total, calc_call_volume, get_weighted_avg_latency, get_status, get_call_name, create_call_row, calc_ltv, calc_arpu, calc_date_length, calc_conversion, conversion_test, get_app_name, get_paying_customers, calc_retention, calc_average_retention, get_app_type, calc_app_contributions
 
 ################################# Web App ######################################
 
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
-app.secret_key = "lkkljasdienynfslkci"
+app.secret_key = "lkkljasdienjlkjlkjsadaiuoiqwqynfslkci"
 
 # Raise an error if you use an undefined Jinja2 variable.
 app.jinja_env.undefined = StrictUndefined
@@ -66,12 +66,21 @@ def calls_by_env():
 
 @app.route('/bubble')
 def apps_by_impact():
-    """Chart of API calls by environment."""
+    """Bubble chart that displays app performance on 4 factors:
+        1. conversion (x-axis)
+        2. retention (y-axis)
+        3. ltv (size)
+        4. app type (color)
 
-    # Retrieve request objects for calls in each environment
-    prod_calls = create_call_row(1)
+        Tooltips also include ARPU and LTV
+    """
 
-    return render_template("bubble.html", prod_calls=prod_calls)
+    retention = calc_average_retention()
+    conversion = calc_conversion()
+    ltv = calc_ltv()
+    arpu = calc_arpu()
+
+    return render_template("bubble.html", conversion=conversion, retention=retention, ltv=ltv, arpu=arpu)
 
 
 @app.route('/type')
