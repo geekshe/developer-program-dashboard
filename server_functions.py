@@ -18,21 +18,23 @@ from datetime import datetime, timedelta
 # env_id 4 = internal
 
 
-def get_agg_request(env_filter):
+def get_agg_request(env_filter, date_filter='2017-02-08'):
     """Retrieves request objects for a specified environment"""
 
     env_filter = env_filter
+    date_filter = date_filter
 
-    requests = db.session.query(Agg_Request).filter(Agg_Request.env_id == env_filter).group_by(Agg_Request.aggr_id).all()
+    requests = db.session.query(Agg_Request).filter(Agg_Request.env_id == env_filter, Agg_Request.date == date_filter).group_by(Agg_Request.aggr_id).all()
 
     return requests
 
 
-def get_env_total(env_filter):
+def get_env_total(env_filter, date_filter='2017-02-08'):
 
     env_filter = env_filter
+    date_filter = date_filter
 
-    success_totals = db.session.query(db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.env_id == env_filter).group_by(Agg_Request.aggr_id).all()
+    success_totals = db.session.query(db.func.sum(Agg_Request.success_count).label('total')).filter(Agg_Request.env_id == env_filter, Agg_Request.date == date_filter).group_by(Agg_Request.aggr_id).all()
 
     env_total = Decimal(0)
 
@@ -42,12 +44,13 @@ def get_env_total(env_filter):
     return env_total
 
 
-def calc_call_volume(env_filter):
+def calc_call_volume(env_filter, date_filter='2017-02-08'):
 
     env_filter = env_filter
+    date_filter = date_filter
 
-    env_requests = get_agg_request(env_filter)
-    env_total = get_env_total(env_filter)
+    env_requests = get_agg_request(env_filter, date_filter)
+    env_total = get_env_total(env_filter, date_filter)
 
     env_call_volumes = {}
     for request in env_requests:
@@ -56,9 +59,10 @@ def calc_call_volume(env_filter):
     return env_call_volumes
 
 
-def get_weighted_avg_latency(env_filter):
+def get_weighted_avg_latency(env_filter, date_filter='2017-02-08'):
 
     env_filter = env_filter
+    date_filter = date_filter
 
     # Get the latency for each call. Returns a list.
     all_latency = db.session.query(Agg_Request.avg_response_time).filter(Agg_Request.env_id == env_filter).all()
@@ -68,7 +72,7 @@ def get_weighted_avg_latency(env_filter):
 
     # Get the volume percent for each call
     # Returns a dictionary
-    env_call_volumes = calc_call_volume(env_filter)
+    env_call_volumes = calc_call_volume(env_filter, date_filter)
 
     # Multiply the latency by the volume percent for each call
     # Add those together and divide by the number of calls
@@ -93,14 +97,15 @@ def calc_rating(env_filter, status_type):
     return rating
 
 
-def calc_latency(env):
-    pass
+# def calc_latency(env):
+#     pass
 
 
-def get_status(env_filter, status_type):
+def get_status(env_filter, status_type, date_filter='2017-02-08'):
     """Given a environment filter and a type of status calculation to do, calculate the status, compare it to a range, and return the status attributes."""
 
     env_filter = env_filter
+    date_filter = date_filter
     status_type = status_type
 
     status_rating = {}
@@ -137,14 +142,15 @@ def get_call_name(call_id):
     return this_call_name.call_name
 
 
-def create_call_row(env_filter):
+def create_call_row(env_filter, date_filter):
 
     env_filter = env_filter
+    date_filter = date_filter
 
-    env_total = get_env_total(env_filter)
+    env_total = get_env_total(env_filter, date_filter)
 
     # Object containing individual agg_requests
-    env_calls = get_agg_request(env_filter)
+    env_calls = get_agg_request(env_filter, date_filter)
 
     call_data = []
 
@@ -349,13 +355,6 @@ def calc_date_length(start_date, end_date):
     return num_of_months
 
 
-# def get_app_data(env_filter, date):
-#     # In progress
-#     env_filter = env_filter
-#     date = date
-
-#     apps = db.session.query(Agg_Request).filter(Agg_Request.env_id == env_filter).group_by(Agg_Request.aggr_id).all()
-
 def get_app_type(app_id):
     """Given an app_id, retrieve the app_type for that app """
 
@@ -366,4 +365,26 @@ def get_app_type(app_id):
     return app_obj.app_type
 
 def calc_app_contributions():
-    pass
+    """Call several other functions and generate a master dictionary with important info about an app's impact on company success"""
+
+    app_success_factors = {}
+
+    arpu = calc_arpu()
+    ltv = calc_ltv()
+
+    conversion = calc_conversion()
+    avg_retention = calc_average_retention()
+
+    # Merge nested dictionaries
+    app_success_factors = arpu.copy()
+
+    for app_id in ltv:
+        app_success_factors[app_id].update(ltv[app_id])
+
+    for app_id in conversion:
+        app_success_factors[app_id].update(conversion[app_id])
+
+    for app_id in avg_retention:
+        app_success_factors[app_id].update(avg_retention[app_id])
+
+    return app_success_factors

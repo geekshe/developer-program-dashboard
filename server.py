@@ -55,11 +55,11 @@ def calls_by_env():
     """Chart of API calls by environment."""
 
     # Retrieve request objects for calls in each environment
-    prod_calls = create_call_row(1)
+    prod_calls = create_call_row(1, '2017-02-08')
 
-    stage_calls = create_call_row(2)
+    stage_calls = create_call_row(2, '2017-02-08')
 
-    internal_calls = create_call_row(4)
+    internal_calls = create_call_row(4, '2017-02-08')
 
     return render_template("env.html", prod_calls=prod_calls, stage_calls=stage_calls, internal_calls=internal_calls)
 
@@ -75,12 +75,9 @@ def apps_by_impact():
         Tooltips also include ARPU and LTV
     """
 
-    retention = calc_average_retention()
-    conversion = calc_conversion()
-    ltv = calc_ltv()
-    arpu = calc_arpu()
+    app_success_factors = calc_app_contributions
 
-    return render_template("bubble.html", conversion=conversion, retention=retention, ltv=ltv, arpu=arpu)
+    return render_template("bubble.html", app_success_factors=app_success_factors)
 
 
 @app.route('/type')
@@ -101,27 +98,27 @@ def calls_by_type():
     return render_template("env.html", requests=requests, env_total=env_total)
 
 
-@app.route('/d3')
-def show_apps_customers():
-    """Show relationship of apps to their customers and vice versa."""
+# @app.route('/d3')
+# def show_apps_customers():
+#     """Show relationship of apps to their customers and vice versa."""
 
-    return render_template("d3.html")
-
-
-@app.route('/d3-force-curve')
-def show_apps_curve():
-    """Show relationship of apps to their customers and vice versa."""
-
-    return render_template("d3-force-curve.html")
+#     return render_template("d3.html")
 
 
-@app.route('/miserables.json')
-def render_d3_relationships():
-    """Show relationship of apps to their customers and vice versa."""
+# @app.route('/d3-force-curve')
+# def show_apps_curve():
+#     """Show relationship of apps to their customers and vice versa."""
 
-    json_string = open('miserables.json').read()
+#     return render_template("d3-force-curve.html")
 
-    return json_string
+
+# @app.route('/miserables.json')
+# def render_d3_relationships():
+#     """Show relationship of apps to their customers and vice versa."""
+
+#     json_string = open('miserables.json').read()
+
+#     return json_string
 
 
 ################################################################################
