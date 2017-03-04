@@ -97,10 +97,6 @@ def calc_rating(env_filter, status_type):
     return rating
 
 
-# def calc_latency(env):
-#     pass
-
-
 def get_status(env_filter, status_type, date_filter='2017-02-08'):
     """Given a environment filter and a type of status calculation to do, calculate the status, compare it to a range, and return the status attributes."""
 
@@ -187,6 +183,55 @@ def calc_arpu():
 
     return all_customer_data
 
+
+def calc_app_avg_arpu():
+    """"""
+
+    all_cust_arpu = calc_arpu()
+
+        # Initialize an empty list to hold app_id's and customer ltv's
+    all_app_cust_arpu = {}
+
+    # Use customer ID to get a list of apps they have used.
+    for customer in all_cust_arpu:
+        cust_id = customer['cust_id']
+        arpu = customer['revenue']
+        all_cust_apps = db.session.query(App_Used).filter(App_Used.customer_id == cust_id).all()
+
+        # Look at each app a customer uses
+        for app in all_cust_apps:
+            app_id = app.app_id
+            app_id_str = str(app.app_id)  # Stringify app_id for use as a key
+
+            # Is the app already in the big list?
+            if app_id_str in all_app_cust_arpu:
+                # Assign a name to outer dictionary to avoid confusion
+                app_id_dict = all_app_cust_arpu[app_id_str]
+                # If yes, add that customer's arpu to the stored arpu
+                app_id_dict['arpu'] = app_id_dict.get('arpu', 0) + arpu
+                # Increment the divide_by counter by one
+                app_id_dict['counter'] = app_id_dict.get('counter', 0) + 1
+            # If no, add it to the big list
+            else:
+                # Add the key to the dict
+                all_app_cust_arpu[app_id_str] = {}
+                # Assign a name to outer dictionary to avoid confusion
+                app_id_dict = all_app_cust_arpu[app_id_str]
+                # Assign an LTV equal to that customer's LTV
+                app_id_dict['arpu'] = arpu
+                # Assign a counter value of 1
+                app_id_dict['counter'] = 1
+    # When the big list is finally assembled
+        for app_id_str in all_app_cust_arpu:
+            # Assign a name to outer dictionary to avoid confusion
+            app_id_dict = all_app_cust_arpu[app_id_str]
+            # For each app, divide the arpu by the counter to get avg_arpu
+            # Add that to the dictionary
+            app_id_dict['avg_arpu'] = round(app_id_dict['arpu'] / app_id_dict['counter'], 2)
+    # Return the dictionary 
+    return all_app_cust_arpu
+
+
 def calc_ltv():
     """If a customer has a paid subscription, determine what their monthly revenue is, how long they've had the paid subscription, and multiply the two values to get LTV (life time value).
 
@@ -207,6 +252,56 @@ def calc_ltv():
         all_customer_data.append(this_cust)
 
     return all_customer_data
+
+
+def calc_app_avg_ltv():
+    """"""
+
+    # Get paying customers and their LTV
+    all_cust_ltv = calc_ltv()
+
+    # Initialize an empty list to hold app_id's and customer ltv's
+    all_app_cust_ltv = {}
+
+    # Use customer ID to get a list of apps they have used.
+    for customer in all_cust_ltv:
+        cust_id = customer['cust_id']
+        ltv = customer['ltv']
+        all_cust_apps = db.session.query(App_Used).filter(App_Used.customer_id == cust_id).all()
+
+        # Look at each app a customer uses
+        for app in all_cust_apps:
+            app_id = app.app_id
+            app_id_str = str(app.app_id)  # Stringify app_id for use as a key
+
+            # Is the app already in the big list?
+            if app_id_str in all_app_cust_ltv:
+                # Assign a name to outer dictionary to avoid confusion
+                app_id_dict = all_app_cust_ltv[app_id_str]
+                # If yes, add that customer's ltv to the stored ltv
+                app_id_dict['ltv'] = app_id_dict.get('ltv', 0) + ltv
+                # Increment the divide_by counter by one
+                app_id_dict['counter'] = app_id_dict.get('counter', 0) + 1
+            # If no, add it to the big list
+            else:
+                # Add the key to the dict
+                all_app_cust_ltv[app_id_str] = {}
+                # Assign a name to outer dictionary to avoid confusion
+                app_id_dict = all_app_cust_ltv[app_id_str]
+                # Assign an LTV equal to that customer's LTV
+                app_id_dict['ltv'] = ltv
+                # Assign a counter value of 1
+                app_id_dict['counter'] = 1
+    # When the big list is finally assembled
+        for app_id_str in all_app_cust_ltv:
+            # Assign a name to outer dictionary to avoid confusion
+            app_id_dict = all_app_cust_ltv[app_id_str]
+            # For each app, divide the ltv by the counter to get avg_ltv
+            # Add that to the dictionary
+            app_id_dict['avg_ltv'] = round(app_id_dict['ltv'] / app_id_dict['counter'], 2)
+    # Return the dictionary 
+    return all_app_cust_ltv
+
 
 def calc_conversion():
     """For paying customers (whether or not their subscription is currently active), determine if their subscription started within 30 days of their using an app. If so, that counts as an app-driven conversion and can be attributed to that app."""
@@ -242,10 +337,10 @@ def calc_conversion():
                     # Assign a name to outer dictionary to avoid confusion
                     app_id_dict = all_app_conv_count[app_id_str]
                     # Retrieve the counter value and add one to it
-                    app_id_dict['counter'] = app_id_dict.get('counter', 0) + 1
+                    app_id_dict['conversion'] = app_id_dict.get('conversion', 0) + 1
                 else:
                     # If not in the main dictioary, add it with the inital counter value of 1
-                    all_app_conv_count[app_id_str] = {'counter': 1, 'app_name': get_app_name(app_id)}
+                    all_app_conv_count[app_id_str] = {'conversion': 1}
 
     # Return the dictionary of apps and their counter values
     # That counter value determines the x axis of the bubble chart
@@ -355,12 +450,12 @@ def calc_date_length(start_date, end_date):
     return num_of_months
 
 
-def get_app_type(app_id):
+def get_app_type(app_id_str):
     """Given an app_id, retrieve the app_type for that app """
 
-    app_id = app_id
+    app_id_str = app_id_str
 
-    app_obj = db.session.query(Application.app_type).filter(Application.app_id == app_id).one()
+    app_obj = db.session.query(Application.app_type).filter(Application.app_id == app_id_str).one()
 
     return app_obj.app_type
 
@@ -369,22 +464,41 @@ def calc_app_contributions():
 
     app_success_factors = {}
 
-    arpu = calc_arpu()
-    ltv = calc_ltv()
-
+    ltv = calc_app_avg_ltv()
+    # arpu = calc_app_avg_arpu()
     conversion = calc_conversion()
     avg_retention = calc_average_retention()
 
     # Merge nested dictionaries
-    app_success_factors = arpu.copy()
+    app_success_factors = ltv.copy()
 
-    for app_id in ltv:
-        app_success_factors[app_id].update(ltv[app_id])
+    # for app_id_str in arpu:
+    #     app_success_factors[app_id_str].update(arpu[app_id_str])
 
-    for app_id in conversion:
-        app_success_factors[app_id].update(conversion[app_id])
+    for app_id_str in conversion:
+        app_success_factors[app_id_str].update(conversion[app_id_str])
 
-    for app_id in avg_retention:
-        app_success_factors[app_id].update(avg_retention[app_id])
+    for app_id_str in avg_retention:
+        app_success_factors[app_id_str].update(avg_retention[app_id_str])
+
+    for app_id_str in app_success_factors:
+        app_success_factors[app_id_str]['app_type'] = get_app_type(app_id_str)
+        app_success_factors[app_id_str]['app_name'] = get_app_name(app_id_str)
 
     return app_success_factors
+
+def filter_dict():
+    """"""
+
+    types = ['marketing', 'email', 'listing', 'buying', 'search', 'shopping cart', 'inventory', 'sourcing']
+
+    dict_by_id = calc_app_contributions()
+
+    dict_by_type = {}
+
+    for key, value in dict_by_id.items():
+        for type_filter in types:
+            if value['app_type'] == type_filter:
+                dict_by_type.setdefault(type_filter, []).append(value)
+
+    return dict_by_type

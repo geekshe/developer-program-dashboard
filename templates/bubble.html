@@ -22,31 +22,25 @@
         data: {
             labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
             datasets: [
-            {% for app in app_success_factors %}
-              {
-                label: "{{ app['app_name'] }}",
-                data: [
-                    {
-                        x: {{ app['ltv'] }},
-                        y: {{ app['arpu'] }},
-                        r: {{ app['retention'] }}
-                    },
-                ],
-              },
-            {% endfor %}
-            {
-            label: 'First Dataset',
-            data: [
-                {
-                    x: 20,
-                    y: 30,
-                    r: 15
-                },
-            ],
-            backgroundColor:"#FF6384",
-            hoverBackgroundColor: "#FF6384",
-        }]
-        },
+                       {
+                         label: "Marketing",
+                         data: [
+                          {% for apps in app_success_factors['marketing'] %}
+                             {% for app in apps %}
+                                 {% if app['conversion'] is defined %}
+                                 {
+                                     x: {{ app['conversion'] }},
+                                     y: {{ app['app_avg_retention'] }},
+                                     r: {{ app['ltv'] / 100 }}
+                                 },
+                                 {% endif %}
+                                 {% endfor %}
+                         ],
+                         backgroundColor:"#FF6384",
+                         hoverBackgroundColor: "#FF6384",
+                       },
+                     {% endfor %}
+
         options: {
             scales: {
                 yAxes: [{

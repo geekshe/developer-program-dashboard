@@ -16,7 +16,7 @@ import json
 from model import Environment, API, Call, Request, Agg_Request, Customer, Developer, Application, App_Used
 from model import connect_to_db, db
 
-from server_functions import get_agg_request, get_env_total, calc_call_volume, get_weighted_avg_latency, get_status, get_call_name, create_call_row, calc_ltv, calc_arpu, calc_date_length, calc_conversion, conversion_test, get_app_name, get_paying_customers, calc_retention, calc_average_retention, get_app_type, calc_app_contributions
+from server_functions import get_agg_request, get_env_total, calc_call_volume, get_weighted_avg_latency, get_status, get_call_name, create_call_row, calc_ltv, calc_arpu, calc_date_length, calc_conversion, conversion_test, get_app_name, get_paying_customers, calc_retention, calc_average_retention, get_app_type, calc_app_contributions, calc_app_avg_ltv, calc_app_avg_arpu, filter_dict
 
 ################################# Web App ######################################
 
@@ -75,7 +75,7 @@ def apps_by_impact():
         Tooltips also include ARPU and LTV
     """
 
-    app_success_factors = calc_app_contributions
+    app_success_factors = filter_dict()
 
     return render_template("bubble.html", app_success_factors=app_success_factors)
 
