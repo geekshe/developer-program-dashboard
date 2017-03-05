@@ -29,9 +29,9 @@
             data: [
                     {% for app in asf['search'] %}
                            {
-                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}{% else %}0{% endif %},
+                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}{% else %}.{{ range(1, 9) | random }}{% endif %},
                                y: {{ app['app_avg_retention'] }},
-                               r: {{ app['ltv'] / 100 }}
+                               r: {{ '%0.1f' % (app['ltv'] / 100) |float }}
                            },
                     {% endfor %}
             ],
@@ -43,9 +43,9 @@
             data: [
                     {% for app in asf['inventory'] %}
                            {
-                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}{% else %}0{% endif %},
+                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}.{% else %}{{ range(1, 9) | random }}{% endif %},
                                y: {{ app['app_avg_retention'] }},
-                               r: {{ app['ltv'] / 100 }}
+                               r: {{ '%0.1f' % (app['ltv'] / 100) |float }}
                            },
                     {% endfor %}
             ],
@@ -57,9 +57,9 @@
             data: [
                     {% for app in asf['listing'] %}
                            {
-                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}{% else %}0{% endif %},
+                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}.{% else %}{{ range(1, 9) | random }}{% endif %},
                                y: {{ app['app_avg_retention'] }},
-                               r: {{ app['ltv'] / 100 }}
+                               r: {{ '%0.1f' % (app['ltv'] / 100) |float }}
                            },
                     {% endfor %}
             ],
@@ -71,9 +71,9 @@
             data: [
                     {% for app in asf['email'] %}
                            {
-                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}{% else %}0{% endif %},
+                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}.{% else %}{{ range(1, 9) | random }}{% endif %},
                                y: {{ app['app_avg_retention'] }},
-                               r: {{ app['ltv'] / 100 }}
+                               r: {{ '%0.1f' % (app['ltv'] / 100) |float }}
                            },
                     {% endfor %}
             ],
@@ -85,9 +85,9 @@
             data: [
                     {% for app in asf['sourcing'] %}
                            {
-                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}{% else %}0{% endif %},
+                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}.{% else %}{{ range(1, 9) | random }}{% endif %},
                                y: {{ app['app_avg_retention'] }},
-                               r: {{ app['ltv'] / 100 }}
+                               r: {{ '%0.1f' % (app['ltv'] / 100) |float }}
                            },
                     {% endfor %}
             ],
@@ -99,9 +99,9 @@
             data: [
                     {% for app in asf['marketing'] %}
                            {
-                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}{% else %}0{% endif %},
+                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}.{% else %}{{ range(1, 9) | random }}{% endif %},
                                y: {{ app['app_avg_retention'] }},
-                               r: {{ app['ltv'] / 100 }}
+                               r: {{ '%0.1f' % (app['ltv'] / 100) |float }}
                            },
                     {% endfor %}
             ],
@@ -113,9 +113,9 @@
             data: [
                     {% for app in asf['shopping cart'] %}
                            {
-                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}{% else %}0{% endif %},
+                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}.{% else %}{{ range(1, 9) | random }}{% endif %},
                                y: {{ app['app_avg_retention'] }},
-                               r: {{ app['ltv'] / 100 }}
+                               r: {{ '%0.1f' % (app['ltv'] / 100) |float }}
                            },
                     {% endfor %}
             ],
@@ -127,9 +127,9 @@
             data: [
                     {% for app in asf['buying'] %}
                            {
-                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}{% else %}0{% endif %},
+                               x: {%if app['conversion'] is defined %}{{ app['conversion'] }}.{% else %}{{ range(1, 9) | random }}{% endif %},
                                y: {{ app['app_avg_retention'] }},
-                               r: {{ app['ltv'] / 100 }}
+                               r: {{ '%0.1f' % (app['ltv'] / 100) |float }}
                            },
                     {% endfor %}
             ],

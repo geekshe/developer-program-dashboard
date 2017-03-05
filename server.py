@@ -1,6 +1,11 @@
 """Developer Program Dashboard."""
 
 ############################### Import Modules #################################
+import os
+import twitter
+from klout import *
+import time
+
 from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, redirect, request, flash, session, jsonify
@@ -8,14 +13,13 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 import sqlalchemy
 
-from decimal import Decimal
-
 import json
 
 # Import my data model
 from model import Environment, API, Call, Request, Agg_Request, Customer, Developer, Application, App_Used
 from model import connect_to_db, db
 
+# Import functions from the support file
 from server_functions import get_agg_request, get_env_total, calc_call_volume, get_weighted_avg_latency, get_status, get_call_name, create_call_row, calc_ltv, calc_arpu, calc_date_length, calc_conversion, conversion_test, get_app_name, get_paying_customers, calc_retention, calc_average_retention, get_app_type, calc_app_contributions, calc_app_avg_ltv, calc_app_avg_arpu, filter_dict
 
 ################################# Web App ######################################
@@ -27,6 +31,14 @@ app.secret_key = "lkkljasdienjlkjlkjsadaiuoiqwqynfslkci"
 
 # Raise an error if you use an undefined Jinja2 variable.
 app.jinja_env.undefined = StrictUndefined
+
+# configure Twitter API
+api = twitter.Api(os.environ.get('TWITTER_CONSUMER_KEY'),
+                  os.environ.get('TWITTER_CONSUMER_SECRET'),
+                  os.environ.get('TWITTER_ACCESS_TOKEN_KEY'),
+                  os.environ.get('TWITTER_ACCESS_TOKEN_SECRET'))
+
+klout = Klout(os.environ.get('KLOUT_KEY'))
 
 ############################### Flask Routes ###################################
 
@@ -76,27 +88,25 @@ def apps_by_impact():
     """
 
     asf = filter_dict()
-    tree = 'I am a tree'
 
-    return render_template("bubble.html", asf=asf, tree=tree)
+    return render_template("bubble.html", asf=asf)
 
 
-@app.route('/type')
-def calls_by_type():
-    """Chart of API calls by developer type."""
+@app.route('/social')
+def social():
+    """Display social stats."""
 
-    env_filter = '%prod%'
+    # Fetch klout ID
+    klout_id = klout.identity.klout(screenName="geekshe").get('id')
 
-    requests = db.session.query(Request).filter(Request.call_code.like(env_filter)).group_by(Request.aggr_id).all()
+    # fetch klout score
+    klout_score = klout.user.score(kloutId=klout_id).get('score')
 
-    success_totals = db.session.query(db.func.sum(Request.success_count).label('total')).filter(Request.call_code.like(env_filter)).group_by(Request.aggr_id).all()
+    # fetch 3 tweets from my account
+    my_tweets = api.GetUserTimeline(screen_name='geekshe')
 
-    env_total = 0
-
-    for success_total in success_totals:
-        env_total += success_total.total
-
-    return render_template("env.html", requests=requests, env_total=env_total)
+    # Pass tweetss to the social page
+    return render_template("social.html", my_tweets=my_tweets, klout_score=klout_score)
 
 
 # @app.route('/d3')
@@ -121,6 +131,12 @@ def calls_by_type():
 
 #     return json_string
 
+
+# This is a jinja custom filter
+@app.template_filter('strftime')
+def _jinja2_filter_datetime(date, fmt=None):
+    pyDate = time.strptime(date,'%a %b %d %H:%M:%S +0000 %Y')  # convert twitter date string into python date/time
+    return time.strftime('%Y-%m-%d %H:%M:%S', pyDate)  # return the formatted date.
 
 ################################################################################
 
