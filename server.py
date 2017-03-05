@@ -75,9 +75,10 @@ def apps_by_impact():
         Tooltips also include ARPU and LTV
     """
 
-    app_success_factors = filter_dict()
+    asf = filter_dict()
+    tree = 'I am a tree'
 
-    return render_template("bubble.html", app_success_factors=app_success_factors)
+    return render_template("bubble.html", asf=asf, tree=tree)
 
 
 @app.route('/type')
