@@ -113,15 +113,15 @@ def get_status(env_filter, status_type, date_filter='2017-02-08'):
     if status_rating['avg_latency'] < 200:
         status_rating['status_color'] = 'green'
         status_rating['rating'] = 9
-        status_rating['status_icon'] = 'fa-check-square'
+        status_rating['status_icon'] = 'fa-check-circle'
     elif 200 <= status_rating['avg_latency'] < 800:
         status_rating['status_color'] = 'yellow'
         status_rating['rating'] = 5
-        status_rating['status_icon'] = 'fa-exclamation'
+        status_rating['status_icon'] = 'fa-exclamation-circle'
     elif status_rating['avg_latency'] >= 800:
         status_rating['status_color'] = 'red'
         status_rating['rating'] = 2
-        status_rating['status_icon'] = 'fa-flash'
+        status_rating['status_icon'] = 'fa-times-circle'
 
     return status_rating
 
@@ -228,7 +228,8 @@ def calc_app_avg_arpu():
             # For each app, divide the arpu by the counter to get avg_arpu
             # Add that to the dictionary
             app_id_dict['avg_arpu'] = round(app_id_dict['arpu'] / app_id_dict['counter'], 2)
-    # Return the dictionary 
+
+    # Return the dictionary
     return all_app_cust_arpu
 
 

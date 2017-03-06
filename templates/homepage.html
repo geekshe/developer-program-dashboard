@@ -12,7 +12,7 @@
                 <div class="row">
                     <div class="col-xs-3">
                         <!-- Status icon -->
-                        <a href="/bubble"><i class="fa {{ overall_status['status_icon'] }} fa-5x"></i></a>
+                        <a href="/bubble" class="white-icon"><i class="fa {{ overall_status['status_icon'] }} fa-5x"></i></a>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">{{ overall_status['rating'] }}/10</div>
@@ -38,7 +38,7 @@
                 <div class="row">
                     <div class="col-xs-3">
                         <!-- Status icon -->
-                        <a href="/env"><i class="fa {{ performance_status['status_icon'] }} fa-5x"></i></a>
+                        <a href="/env" class="white-icon"><i class="fa {{ performance_status['status_icon'] }} fa-5x"></i></a>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">{{ performance_status['rating'] }}/10</div>
@@ -64,7 +64,7 @@
                 <div class="row">
                     <div class="col-xs-3">
                         <!-- Status icon -->
-                        <a href="/social"><i class="fa {{ outreach_status['status_icon'] }} fa-5x"></i></a>
+                        <a href="/social" class="white-icon"><i class="fa {{ outreach_status['status_icon'] }} fa-5x"></i></a>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">{{ outreach_status['rating'] }}/10</div>
@@ -82,6 +82,5 @@
         </div>
     </div>
 </div>
-
 
 {% endblock %}
