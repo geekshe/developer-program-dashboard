@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <!-- jQuery -->
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<h1>Outreach</h1>
+
+
+<h2>Klout</h2>
+
+    <div class="row">
+      <!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  Klout Score
+              </div>
+              <!-- /.panel-heading -->
+              <div class="panel-body">
+                <p>
+                  {{ '%0.1f' % klout_score |float }}
+                </p>
+              <!-- /.panel-body -->
+          </div>
+          <!-- /.panel -->
+      </div>
+    </div>
+  </div>
+
+
+<h2>Tweets</h2>
+
+  {% for tweet in my_tweets %}
+    <div class="row">
+      <!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  Tweet ID: {% if tweet is defined %}{{tweet.id}}{% endif %}
+              </div>
+              <!-- /.panel-heading -->
+              <div class="panel-body">
+                <p>
+                  {{ tweet.text }}
+                  <br>
+                  <strong>@{{ tweet.user.screen_name }}</strong>
+                  | <a href="https://www.twitter.com/{{tweet.user.screen_name}}/status/{{tweet.id}}">link</a>
+                  <br>
+                  {{tweet.created_at|strftime}}
+                </p>
+              <!-- /.panel-body -->
+          </div>
+          <!-- /.panel -->
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+
+{% endblock %}

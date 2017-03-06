@@ -109,6 +109,13 @@ def social():
     return render_template("social.html", my_tweets=my_tweets, klout_score=klout_score)
 
 
+@app.route('/map')
+def map():
+    """Show developer locations world wide."""
+
+    # Render the map
+    return render_template("map.html")
+
 # @app.route('/d3')
 # def show_apps_customers():
 #     """Show relationship of apps to their customers and vice versa."""

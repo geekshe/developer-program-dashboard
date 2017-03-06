@@ -22,17 +22,17 @@ body {
 }
 
 .rightnav {
-    float: right;
+  float: right;
 }
 
 #wrapper {
 	width: 80%;
-    height: 100px;
-    margin: 0;
-    padding: 10px;
-    border: 1px;
-    border-style: solid;
-    border-radius: 25px;
+  height: 100px;
+  margin: 0;
+  padding: 10px;
+  border: 1px;
+  border-style: solid;
+  border-radius: 25px;
 }
 
 #status-icon {
@@ -49,8 +49,13 @@ body {
 }
 
 .PieChart {
-      height: 200px;
-      margin-left: 0;
+  height: 200px;
+  margin-left: 0;
+}
+
+a i {
+  color:#FFF;
+  text-decoration: none;
 }
 
 @-webkit-keyframes heartbeat{
