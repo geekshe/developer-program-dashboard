@@ -53,7 +53,7 @@ body {
   margin-left: 0;
 }
 
-a i {
+a.white-icon {
   color:#FFF;
   text-decoration: none;
 }

@@ -7,7 +7,9 @@ Flask-SQLAlchemy==2.0
 future==0.16.0
 itsdangerous==0.24
 Jinja2==2.7.3
+Klout==0.1.3
 MarkupSafe==0.23
+oauth==1.0.1
 oauthlib==2.0.1
 packaging==16.8
 pkg-resources==0.0.0
