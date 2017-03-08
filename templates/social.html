@@ -12,43 +12,49 @@
 <p>Social reach determined by Klout score.</p>
 <h2>Klout</h2>
 
-    <div class="row">
-      <!-- /.col-lg-4 -->
-      <div class="col-lg-4">
-          <div class="panel panel-default">
-              <div class="panel-heading">
-                  Klout Score
-              </div>
-              <!-- /.panel-heading -->
-              <div class="panel-body">
-                <p>
-                  {{ '%0.1f' % klout_score |float }}
-                </p>
-              <!-- /.panel-body -->
-          </div>
-          <!-- /.panel -->
-      </div>
+<div class="row">
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-yellow">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <!-- Status icon -->
+                        <i class="fa fa-exclamation-circle fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{ '%0.0f' % klout_score |float }}/100</div>
+                        <div>Klout Score</div>
+                    </div>
+                </div>
+            </div>
+<!--             <a href="/social">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a> -->
+        </div>
     </div>
-  </div>
+</div>
 
 
 <h2>Tweets</h2>
-<p>Recent Developer Program tweets.</p>
+<p>Recent <a href="https://www.twitter.com/geekshe">@geekshe</a> tweets.</p>
   {% for tweet in my_tweets %}
     <div class="row">
       <!-- /.col-lg-4 -->
       <div class="col-lg-4">
           <div class="panel panel-default">
               <div class="panel-heading">
-                  Tweet ID: {% if tweet is defined %}{{tweet.id}}{% endif %}
+                  {% if tweet is defined %}<a href="https://www.twitter.com/{{tweet.user.screen_name}}/status/{{tweet.id}}">{{tweet.id}}</a>{% endif %}
               </div>
               <!-- /.panel-heading -->
               <div class="panel-body">
                 <p>
                   {{ tweet.text }}
                   <br>
-                  <strong>@{{ tweet.user.screen_name }}</strong>
-                  | <a href="https://www.twitter.com/{{tweet.user.screen_name}}/status/{{tweet.id}}">link</a>
+                  <strong><a href="https://www.twitter.com/{{tweet.user.screen_name}}">@{{ tweet.user.screen_name }}</a></strong>
                   <br>
                   {{tweet.created_at|strftime}}
                 </p>

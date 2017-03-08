@@ -15,8 +15,8 @@
 <p>Ecommerce API applications plotted by conversion, retention, life-time value and type.</p>
 <div class="row">
   <!-- /.col-lg-8 -->
-  <div class="col-lg-8">
-    <canvas id="myChart" width="800" height="600"></canvas>
+  <div class="col-lg-10">
+    <canvas id="myChart" width="900" height="600"></canvas>
     <script>
     // Chart.defaults.global.layout.padding = 3;
     var ctx = document.getElementById("myChart");
@@ -134,7 +134,7 @@
                            },
                     {% endfor %}
             ],
-            backgroundColor:"#e8c70d",
+            backgroundColor:"#ffd000",
             hoverBackgroundColor: "#ffdd21",
         },
 
@@ -143,11 +143,17 @@
         ]
         },
         options: {
+          title:{
+                  display:false,
+                  text:'Application Ecosystem'
+                },
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero:false
+                        callback: function(value, index, values) {
+                          return value;
                     }
+                  }
                 }]
             }
         }
